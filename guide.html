@@ -1,181 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Animal Branch Inc. - Staff Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Branch Inc. | Staff Portal</title>
     <style>
-        /* BEGINNER FRIENDLY STYLING (Internal CSS) */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
+        /* BEGINNER-FRIENDLY STYLING (Internal CSS) */
+        :root { --primary: #2c3e50; --secondary: #27ae60; --light: #ecf0f1; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: var(--light); }
+        
+        /* Navigation */
+        nav { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Auth Container */
+        .container { background: white; max-width: 400px; margin: 50px auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--secondary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #219150; }
 
-        /* The Box that holds the Login/Register forms */
-        .container {
-            background-color: white;
-            width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 2px solid #34495e;
-            border-radius: 15px;
-            box-shadow: 10px 10px 5px grey;
-        }
-
-        /* Image Styling */
-        .logo-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            background-color: #27ae60;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background-color: #2ecc71;
-        }
-
+        /* Dashboard */
+        .dashboard { max-width: 1000px; margin: 20px auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .pet-card { background: white; padding: 20px; border-radius: 10px; border-left: 5px solid var(--secondary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .hidden { display: none; }
-
-        /* Dashboard Styling */
-        #dashboard {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: left;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .pet-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            background: #fafafa;
-        }
-
-        .pet-photo {
-            width: 80px;
-            height: 80px;
-            margin-right: 15px;
-            border: 1px solid #000;
-        }
+        
+        /* Highlight for add pet box */
+        .add-pet-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px dashed var(--primary); }
     </style>
 </head>
 <body>
 
+    <nav>
+        <div>🐾 Animal Branch Inc.</div>
+        <div id="nav-links" class="hidden"><button onclick="location.reload()" style="width:auto; background:var(--danger)">Logout</button></div>
+    </nav>
+
     <div id="auth-section" class="container">
-        <img src="https://via.placeholder.com/100" alt="Animal Branch Logo" class="logo-img">
-        
-        <div id="login-div">
+        <div id="login-form">
             <h2>Staff Login</h2>
             <input type="text" id="user" placeholder="Username (admin)">
             <input type="password" id="pass" placeholder="Password (pass123)">
-            <br>
-            <button onclick="checkLogin()">Login</button>
-            <p>Need an account? <a href="#" onclick="showRegister()">Click here</a></p>
+            <button onclick="checkLogin()">Access System</button>
+            <p>New staff? <a href="#" onclick="toggleAuth()">Create Account</a></p>
         </div>
-
-        <div id="register-div" class="hidden">
-            <h2>Create Employee Account</h2>
-            <input type="text" id="newName" placeholder="Full Name">
-            <input type="text" id="newEmail" placeholder="Email Address">
-            <input type="password" placeholder="Create Password">
-            <br>
+        <div id="reg-form" class="hidden">
+            <h2>Register</h2>
+            <input type="text" id="regName" placeholder="Full Name">
+            <input type="password" placeholder="Password">
             <button onclick="doRegister()">Sign Up</button>
-            <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+            <p><a href="#" onclick="toggleAuth()">Back to Login</a></p>
         </div>
-
-        <p id="msg" style="font-weight: bold;"></p>
+        <p id="msg"></p>
     </div>
 
-    <div id="dashboard" class="hidden">
-        <h1>🐾 Animal Branch Management</h1>
-        <p>Logged in as: <b id="current-user"></b> | <button onclick="location.reload()">Logout</button></p>
+    <div id="dashboard" class="dashboard hidden">
+        <h1>Welcome, <span id="display-name"></span></h1>
         
-        <hr>
-
-        <h3>Scheduled Visits for Today</h3>
-        
-        <div class="pet-card">
-            <img src="https://via.placeholder.com/80" alt="Dog Photo" class="pet-photo">
-            <div>
-                <strong>Pet:</strong> Buddy (Golden Retriever)<br>
-                <strong>Notes:</strong> Needs medicine at 12pm. Use back door key.<br>
-                <button onclick="alert('Visit Started!')">Start Visit</button>
+        <div class="add-pet-box">
+            <h3>➕ Add New Pet Visit</h3>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="newPetName" placeholder="Pet Name">
+                <input type="text" id="newPetTask" placeholder="Task (e.g. Walk)">
+                <button onclick="addNewPet()" style="width: 150px;">Add</button>
             </div>
         </div>
 
-        <div class="pet-card">
-            <img src="https://via.placeholder.com/80" alt="Cat Photo" class="pet-photo">
-            <div>
-                <strong>Pet:</strong> Mittens (Tabby Cat)<br>
-                <strong>Notes:</strong> Feeding only. Hide-a-key under the flower pot.<br>
-                <button onclick="alert('Visit Started!')">Start Visit</button>
+        <div class="grid" id="pet-grid">
+            <div class="pet-card">
+                <h3>Buddy (Golden Retriever)</h3>
+                <p><strong>Keys:</strong> Lockbox 4455 | <strong>Task:</strong> 20 min walk</p>
+                <button onclick="alert('Visit Logged!')">Complete</button>
             </div>
         </div>
     </div>
 
     <script>
-        // SIMPLE BEGINNER JAVASCRIPT
-        
-        function showRegister() {
-            document.getElementById('login-div').classList.add('hidden');
-            document.getElementById('register-div').classList.remove('hidden');
-            document.getElementById('msg').innerText = "";
-        }
-
-        function showLogin() {
-            document.getElementById('register-div').classList.add('hidden');
-            document.getElementById('login-div').classList.remove('hidden');
+        function toggleAuth() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('reg-form').classList.toggle('hidden');
         }
 
         function checkLogin() {
-            var u = document.getElementById('user').value;
-            var p = document.getElementById('pass').value;
-
-            // Simple "Beginner" Login logic
-            if(u == "admin" && p == "pass123") {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(u === "admin" && p === "pass123") {
                 document.getElementById('auth-section').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('current-user').innerText = u;
+                document.getElementById('nav-links').classList.remove('hidden');
+                document.getElementById('display-name').innerText = u;
             } else {
-                document.getElementById('msg').innerText = "❌ Invalid! Try admin / pass123";
+                document.getElementById('msg').innerText = "❌ Invalid Credentials";
                 document.getElementById('msg').style.color = "red";
             }
         }
 
-        function doRegister() {
-            var name = document.getElementById('newName').value;
-            if(name == "") {
-                alert("Please enter your name!");
-            } else {
-                document.getElementById('msg').innerText = "✅ Account created for " + name + ". Please login.";
-                document.getElementById('msg').style.color = "blue";
-                showLogin();
-            }
+        function addNewPet() {
+            const name = document.getElementById('newPetName').value;
+            const task = document.getElementById('newPetTask').value;
+            if(!name || !task) return alert("Fill both fields!");
+            
+            const card = document.createElement('div');
+            card.className = 'pet-card';
+            card.innerHTML = `<h3>${name}</h3><p><strong>Keys:</strong> TBD | <strong>Task:</strong> ${task}</p><button onclick="alert('Visit Logged!')">Complete</button>`;
+            document.getElementById('pet-grid').prepend(card);
+            document.getElementById('newPetName').value = ""; document.getElementById('newPetTask').value = "";
         }
+        
+        function doRegister() { alert("Account request sent to management!"); toggleAuth(); }
     </script>
-
 </body>
 </html>
