@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animal Branch Inc. - Staff Portal</title>
+    <style>
+        /* BEGINNER FRIENDLY STYLING (Internal CSS) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f3;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* The Box that holds the Login/Register forms */
+        .container {
+            background-color: white;
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 2px solid #34495e;
+            border-radius: 15px;
+            box-shadow: 10px 10px 5px grey;
+        }
+
+        /* Image Styling */
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #2ecc71;
+        }
+
+        .hidden { display: none; }
+
+        /* Dashboard Styling */
+        #dashboard {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pet-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            background: #fafafa;
+        }
+
+        .pet-photo {
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-section" class="container">
+        <img src="https://via.placeholder.com/100" alt="Animal Branch Logo" class="logo-img">
+        
+        <div id="login-div">
+            <h2>Staff Login</h2>
+            <input type="text" id="user" placeholder="Username (admin)">
+            <input type="password" id="pass" placeholder="Password (pass123)">
+            <br>
+            <button onclick="checkLogin()">Login</button>
+            <p>Need an account? <a href="#" onclick="showRegister()">Click here</a></p>
+        </div>
+
+        <div id="register-div" class="hidden">
+            <h2>Create Employee Account</h2>
+            <input type="text" id="newName" placeholder="Full Name">
+            <input type="text" id="newEmail" placeholder="Email Address">
+            <input type="password" placeholder="Create Password">
+            <br>
+            <button onclick="doRegister()">Sign Up</button>
+            <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+        </div>
+
+        <p id="msg" style="font-weight: bold;"></p>
+    </div>
+
+    <div id="dashboard" class="hidden">
+        <h1>🐾 Animal Branch Management</h1>
+        <p>Logged in as: <b id="current-user"></b> | <button onclick="location.reload()">Logout</button></p>
+        
+        <hr>
+
+        <h3>Scheduled Visits for Today</h3>
+        
+        <div class="pet-card">
+            <img src="https://via.placeholder.com/80" alt="Dog Photo" class="pet-photo">
+            <div>
+                <strong>Pet:</strong> Buddy (Golden Retriever)<br>
+                <strong>Notes:</strong> Needs medicine at 12pm. Use back door key.<br>
+                <button onclick="alert('Visit Started!')">Start Visit</button>
+            </div>
+        </div>
+
+        <div class="pet-card">
+            <img src="https://via.placeholder.com/80" alt="Cat Photo" class="pet-photo">
+            <div>
+                <strong>Pet:</strong> Mittens (Tabby Cat)<br>
+                <strong>Notes:</strong> Feeding only. Hide-a-key under the flower pot.<br>
+                <button onclick="alert('Visit Started!')">Start Visit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SIMPLE BEGINNER JAVASCRIPT
+        
+        function showRegister() {
+            document.getElementById('login-div').classList.add('hidden');
+            document.getElementById('register-div').classList.remove('hidden');
+            document.getElementById('msg').innerText = "";
+        }
+
+        function showLogin() {
+            document.getElementById('register-div').classList.add('hidden');
+            document.getElementById('login-div').classList.remove('hidden');
+        }
+
+        function checkLogin() {
+            var u = document.getElementById('user').value;
+            var p = document.getElementById('pass').value;
+
+            // Simple "Beginner" Login logic
+            if(u == "admin" && p == "pass123") {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('current-user').innerText = u;
+            } else {
+                document.getElementById('msg').innerText = "❌ Invalid! Try admin / pass123";
+                document.getElementById('msg').style.color = "red";
+            }
+        }
+
+        function doRegister() {
+            var name = document.getElementById('newName').value;
+            if(name == "") {
+                alert("Please enter your name!");
+            } else {
+                document.getElementById('msg').innerText = "✅ Account created for " + name + ". Please login.";
+                document.getElementById('msg').style.color = "blue";
+                showLogin();
+            }
+        }
+    </script>
+
+</body>
+</html>
