@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Manager Dashboard</title></head>
+<body style="font-family: Arial; padding: 20px;">
+    <h1>📅 Manager Dashboard: Scheduling</h1>
+    <a href="index.html">Logout</a> | <a href="billing.html">Go to Billing</a>
+    <hr>
+    
+    <div style="background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #3498db;">
+        <h3>➕ Assign New Visit (Scheduling)</h3>
+        <input type="text" id="pName" placeholder="Pet Name">
+        <input type="text" id="sName" placeholder="Staff Member">
+        <input type="time" id="vTime">
+        <button onclick="addVisit()" style="background:#3498db; color:white; border:none; padding:8px;">Add to Log</button>
+    </div>
+
+    <h3>Current Visit Log</h3>
+    <table border="1" id="vTable" style="width: 100%; border-collapse: collapse;">
+        <tr style="background: #2c3e50; color: white;">
+            <th>Time</th><th>Pet Name</th><th>Staff Assigned</th><th>Status</th>
+        </tr>
+    </table>
+
+    <script>
+        function addVisit() {
+            const table = document.getElementById('vTable');
+            const row = table.insertRow(-1);
+            row.innerHTML = `<td>${document.getElementById('vTime').value}</td>
+                             <td>${document.getElementById('pName').value}</td>
+                             <td>${document.getElementById('sName').value}</td>
+                             <td>Active</td>`;
+        }
+    </script>
+</body>
+</html>
