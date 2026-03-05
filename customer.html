@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>Customer Portal</title>
+<style>
+    nav { background: #2c3e50; padding: 10px; color: white; text-align: right; font-family: sans-serif; }
+    nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; }
+    .container { padding: 20px; font-family: Arial, sans-serif; max-width: 800px; margin: auto; text-align: center; }
+    .main-logo { width: 250px; margin-bottom: 10px; }
+    .pop-gallery { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .pop-gallery img { width: 120px; height: 90px; object-fit: cover; border-radius: 5px; }
+    .form-box { background: white; padding: 25px; border-radius: 8px; border: 1px solid #ddd; text-align: left; }
+    input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+</style>
+</head>
+<body style="margin: 0; background: #f9f9f9;">
+    <nav>
+        <span style="float:left;">Customer Portal</span>
+        <a href="index.html" style="color: #e74c3c;">Logout</a>
+    </nav>
+    <div class="container">
+        <img src="Screenshot 2026-01-28 104451.png" alt="Logo" class="main-logo">
+        <div class="Gallery">
+            <img src="istockphoto.png"> <img src="friendly-golden-retriever.png"> <img src="istockphoto_.png">
+        </div>
+        <div class="form-box">
+            <h3>Establish Pet Profile</h3>
+            <input type="text" placeholder="Pet Name">
+            <input type="text" placeholder="Medical Notes">
+            <input type="text" placeholder="Entry Code">
+            <button onclick="alert('Profile Saved!')" style="width:100%; padding:10px; background:#27ae60; color:white; border:none; cursor:pointer;">Save to Database</button>
+        </div>
+    </div>
+</body>
+</html>
