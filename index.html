@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="login-card">
-    <img src="Screenshot 2026-01-28 104451" alt="Company Logo" class="main-logo">
+    <img src="Screenshot 2026-01-28 104451.png" alt="Company Logo" class="main-logo">
     <div id="login-box">
         <h2>System Login</h2>
         <select id="role">
@@ -24,15 +24,12 @@
         <button onclick="login()">Sign In</button>
     </div>
 </div>
-
 <script>
     function login() {
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
         const role = document.getElementById('role').value;
-
         if (email !== "" && pass !== "") {
-            // IMPORTANT: Ensure this filename matches your GitLab file exactly (all lowercase)
             window.location.href = (role === 'staff') ? "schedule.html" : "customer.html";
         } else {
             alert("Login Error: User not found. Please ensure all fields are completed.");
