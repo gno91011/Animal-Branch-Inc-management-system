@@ -8,6 +8,7 @@
         .company-logo { width: 220px; margin-bottom: 20px; }
         input, select { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         button { width: 90%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .toggle-link { color: #2980b9; cursor: pointer; font-size: 0.8em; text-decoration: underline; margin-top: 15px; display: block; }
         #error-msg { color: #e74c3c; font-size: 0.85em; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
@@ -15,7 +16,7 @@
 
 <div class="login-card">
     <img src="Screenshot 2026-01-28 104451.png" alt="Animal Branch Logo" class="company-logo">
-    <h2>System Login</h2>
+    <h2 id="form-title">System Login</h2>
     
     <select id="role">
         <option value="staff">Staff / Manager</option>
@@ -25,35 +26,57 @@
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="pass" placeholder="Password">
     
-    <button onclick="login()">Sign In</button>
-    <p id="error-msg">ACCESS DENIED: Invalid Credentials</p>
+    <button id="main-btn" onclick="handleAuth()">Sign In</button>
+    <p id="error-msg"></p>
+    <span class="toggle-link" id="toggle-text" onclick="toggleForm()">Need an account? Register here</span>
 </div>
 
 <script>
-    function login() {
+    let isRegistering = false;
+
+    function toggleForm() {
+        isRegistering = !isRegistering;
+        document.getElementById('form-title').innerText = isRegistering ? "Create Account" : "System Login";
+        document.getElementById('main-btn').innerText = isRegistering ? "Register" : "Sign In";
+        document.getElementById('toggle-text').innerText = isRegistering ? "Already have an account? Login" : "Need an account? Register here";
+        document.getElementById('error-msg').style.display = "none";
+    }
+
+    function handleAuth() {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('pass').value;
         const role = document.getElementById('role').value;
         const error = document.getElementById('error-msg');
-
-        // Reset error message
-        error.style.display = "none";
-
-        // STRICT VALIDATION LOGIC
-        if (role === "staff" && user === "admin" && pass === "staff123") {
-            window.location.href = "schedule.html";
-        } 
-        else if (role === "owner" && user === "client" && pass === "pet123") {
-            window.location.href = "customer.html";
-        } 
-        else {
-            // IF NEITHER OF THE ABOVE MATCH, BLOCK ACCESS
+        
+        if (!user || !pass) {
+            error.innerText = "Please fill in all fields.";
             error.style.display = "block";
-            document.getElementById('pass').value = ""; 
-            console.log("Login Failed");
+            return;
+        }
+
+        if (isRegistering) {
+            // SAVE NEW ACCOUNT
+            const newUser = { username: user, password: pass, role: role };
+            localStorage.setItem(user, JSON.stringify(newUser));
+            alert("Account created successfully! You can now login.");
+            toggleForm();
+        } else {
+            // LOGIN LOGIC
+            const storedUser = JSON.parse(localStorage.getItem(user));
+
+            // Check Hardcoded Admin or LocalStorage
+            if (role === "staff" && user === "admin" && pass === "staff123") {
+                window.location.href = "schedule.html";
+            } 
+            else if (storedUser && storedUser.password === pass && storedUser.role === role) {
+                window.location.href = (role === "staff") ? "schedule.html" : "customer.html";
+            } 
+            else {
+                error.innerText = "ACCESS DENIED: Invalid Credentials";
+                error.style.display = "block";
+            }
         }
     }
 </script>
-
 </body>
 </html>
