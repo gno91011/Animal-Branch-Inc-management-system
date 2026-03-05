@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head><title>Staff Dashboard</title>
+<style>
+    nav { background: #2c3e50; padding: 10px; color: white; text-align: right; font-family: sans-serif; }
+    nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; }
+    .container { padding: 20px; font-family: Arial, sans-serif; max-width: 1000px; margin: auto; text-align: center; }
+    .main-logo { width: 300px; margin-bottom: 15px; }
+    .pop-gallery { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+    .pop-gallery img { width: 220px; height: 160px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; }
+    .protocol-card { background: white; border: 1px solid #ddd; border-left: 8px solid #27ae60; padding: 20px; text-align: left; border-radius: 8px; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background: #34495e; color: white; }
+</style>
+</head>
+<body style="margin: 0; background: #f4f4f4;">
+    <nav>
+        <span style="float:left;">Employee Management Portal</span>
+        <a href="schedule.html">Schedule</a>
+        <a href="billing.html">Billing</a>
+        <a href="index.html" style="color: #e74c3c;">Logout</a>
+    </nav>
+    <div class="container">
+        <img src="Screenshot 2026-01-28 104451.png" alt="Logo" class="main-logo">
+        <div class="Gallery">
+            <img src="istockphoto.png" alt="Gallery 1">
+            <img src="friendly-golden-retriever.png" alt="Gallery 2">
+            <img src="istockphoto_.png" alt="Gallery 3">
+        </div>
+        <div class="protocol-card">
+            <h3>Standard Visit Protocols</h3>
+            <ul>
+                <li><strong>Access:</strong> Retrieve keys and verify entry code.</li>
+                <li><strong>Maintenance:</strong> Clean bowls; provide fresh food and water.</li>
+                <li><strong>Wellness:</strong> Visual health inspection of the pet.</li>
+                <li><strong>Exercise:</strong> 20-minute physical activity session.</li>
+                <li><strong>Security:</strong> Lock all doors and return keys to secure lockbox.</li>
+            </ul>
+        </div>
+        <table>
+            <tr><th>Time</th><th>Pet Name</th><th>Entry Code</th><th>Status</th></tr>
+            <tr><td>---</td><td>---</td><td>---</td><td><button>Complete</button></td></tr>
+        </table>
+    </div>
+</body>
+</html>
