@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing & Payments</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .unpaid { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>💰 Billing & Payment Tracking</h1>
+    <p>This section helps mitigate missed payments as mentioned in the report.</p>
+
+    <table border="1" cellpadding="10" style="width:100%">
+        <tr style="background:#ddd">
+            <th>Client Name</th>
+            <th>Invoice Date</th>
+            <th>Amount Due</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>Jean Lussier</td>
+            <td>03/01/2026</td>
+            <td>$150.00</td>
+            <td>Paid</td>
+        </tr>
+        <tr>
+            <td>Tim Ticknor</td>
+            <td>03/05/2026</td>
+            <td>$75.00</td>
+            <td class="unpaid">PENDING</td>
+        </tr>
+    </table>
+    <br>
+    <button onclick="alert('Sending Reminder Email...')">Send Payment Reminder</button>
+    <br><br>
+    <a href="index.html">Back to Home</a>
+</body>
+</html>
