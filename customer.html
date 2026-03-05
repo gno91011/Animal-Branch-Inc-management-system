@@ -12,11 +12,11 @@
         .pop-gallery img { width: 200px; height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; background: #fff; }
         .dashboard-grid { display: flex; gap: 20px; text-align: left; }
         .card { background: white; padding: 25px; border-radius: 8px; border: 1px solid #ddd; flex: 1; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        input, textarea, label { width: 100%; display: block; margin-top: 10px; }
+        input, textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border-bottom: 1px solid #eee; padding: 10px; font-size: 0.9em; text-align: left; }
-        th { background: #f8f9fa; color: #2c3e50; }
     </style>
 </head>
 <body>
@@ -25,22 +25,22 @@
     <img src="Screenshot 2026-01-28 104451.png" alt="Company Logo" class="company-logo">
     <h2 style="color: #2c3e50; margin-top: 20px;">Welcome to Animal Branch</h2>
     <div class="pop-gallery">
-        <img src="istockphoto.png" alt="Pet Image 1">
-        <img src="friendly-golden-retriever.png" alt="Pet Image 2">
-        <img src="istockphoto_.png" alt="Pet Image 3">
+        <img src="istockphoto.png" alt="Pet 1"><img src="friendly-golden-retriever.png" alt="Pet 2"><img src="istockphoto_.png" alt="Pet 3">
     </div>
     <div class="dashboard-grid">
         <div class="card">
             <h3>New Service Request</h3>
             <input type="text" id="pName" placeholder="Pet Name">
             <input type="text" id="pService" placeholder="Service Needed">
+            <label style="font-size: 0.8em; color: #666;">Select Date & Time:</label>
+            <input type="datetime-local" id="pTime">
             <textarea id="pNotes" placeholder="Special Instructions"></textarea>
-            <button onclick="addRequest()">Submit to System</button>
+            <button onclick="addRequest()">Submit Request</button>
         </div>
         <div class="card">
             <h3>Appointment Review</h3>
             <table>
-                <thead><tr><th>Date</th><th>Service</th><th>Status</th></tr></thead>
+                <thead><tr><th>Time</th><th>Service</th><th>Status</th></tr></thead>
                 <tbody id="history-list"></tbody>
             </table>
         </div>
@@ -49,12 +49,12 @@
 <script>
     function addRequest() {
         const name = document.getElementById('pName').value;
+        const time = document.getElementById('pTime').value;
         const service = document.getElementById('pService').value;
-        if(!name || !service) return;
+        if(!name || !time) return;
         const table = document.getElementById('history-list');
         const row = table.insertRow(0);
-        row.innerHTML = `<td>${new Date().toLocaleDateString()}</td><td>${service} (${name})</td><td>Pending</td>`;
-        document.getElementById('pName').value = ''; document.getElementById('pService').value = '';
+        row.innerHTML = `<td>${time.replace('T', ' ')}</td><td>${service} (${name})</td><td>Pending</td>`;
     }
 </script>
 </body>
