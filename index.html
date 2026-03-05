@@ -8,8 +8,7 @@
         .company-logo { width: 220px; margin-bottom: 20px; }
         input, select { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         button { width: 90%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        button:hover { background: #219150; }
-        .error-msg { color: #e74c3c; font-size: 0.8em; margin-top: 10px; display: none; }
+        #error-msg { color: #e74c3c; font-size: 0.85em; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
@@ -27,7 +26,7 @@
     <input type="password" id="pass" placeholder="Password">
     
     <button onclick="login()">Sign In</button>
-    <div id="error" class="error-msg">Invalid Username or Password for selected role.</div>
+    <p id="error-msg">ACCESS DENIED: Invalid Credentials</p>
 </div>
 
 <script>
@@ -35,9 +34,12 @@
         const user = document.getElementById('username').value;
         const pass = document.getElementById('pass').value;
         const role = document.getElementById('role').value;
-        const errorDiv = document.getElementById('error');
+        const error = document.getElementById('error-msg');
 
-        // SECURITY LOGIC
+        // Reset error message
+        error.style.display = "none";
+
+        // STRICT VALIDATION LOGIC
         if (role === "staff" && user === "admin" && pass === "staff123") {
             window.location.href = "schedule.html";
         } 
@@ -45,9 +47,10 @@
             window.location.href = "customer.html";
         } 
         else {
-            // FAILED LOGIN
-            errorDiv.style.display = "block";
-            document.getElementById('pass').value = ""; // Clear password for security
+            // IF NEITHER OF THE ABOVE MATCH, BLOCK ACCESS
+            error.style.display = "block";
+            document.getElementById('pass').value = ""; 
+            console.log("Login Failed");
         }
     }
 </script>
