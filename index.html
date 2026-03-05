@@ -6,26 +6,22 @@
         body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .login-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 380px; text-align: center; border: 1px solid #ddd; }
         .company-logo { width: 220px; margin-bottom: 20px; }
-        input, select { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 90%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
         .toggle-link { color: #2980b9; cursor: pointer; font-size: 0.8em; text-decoration: underline; margin-top: 15px; display: block; }
         #error-msg { color: #e74c3c; font-size: 0.85em; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
-
 <div class="login-card">
     <img src="Screenshot 2026-01-28 104451.png" alt="Animal Branch Logo" class="company-logo">
     <h2 id="form-title">System Login</h2>
-    
     <select id="role">
         <option value="staff">Staff / Manager</option>
         <option value="owner">Pet Owner</option>
     </select>
-    
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="pass" placeholder="Password">
-    
     <button id="main-btn" onclick="handleAuth()">Sign In</button>
     <p id="error-msg"></p>
     <span class="toggle-link" id="toggle-text" onclick="toggleForm()">Need an account? Register here</span>
@@ -33,7 +29,6 @@
 
 <script>
     let isRegistering = false;
-
     function toggleForm() {
         isRegistering = !isRegistering;
         document.getElementById('form-title').innerText = isRegistering ? "Create Account" : "System Login";
@@ -48,30 +43,17 @@
         const role = document.getElementById('role').value;
         const error = document.getElementById('error-msg');
         
-        if (!user || !pass) {
-            error.innerText = "Please fill in all fields.";
-            error.style.display = "block";
-            return;
-        }
+        if (!user || !pass) { error.innerText = "Fill in all fields."; error.style.display = "block"; return; }
 
         if (isRegistering) {
-            // SAVE NEW ACCOUNT
-            const newUser = { username: user, password: pass, role: role };
-            localStorage.setItem(user, JSON.stringify(newUser));
-            alert("Account created successfully! You can now login.");
+            localStorage.setItem(user, JSON.stringify({username: user, password: pass, role: role}));
+            alert("Account created! You can now login.");
             toggleForm();
         } else {
-            // LOGIN LOGIC
-            const storedUser = JSON.parse(localStorage.getItem(user));
-
-            // Check Hardcoded Admin or LocalStorage
-            if (role === "staff" && user === "admin" && pass === "staff123") {
-                window.location.href = "schedule.html";
-            } 
-            else if (storedUser && storedUser.password === pass && storedUser.role === role) {
+            const stored = JSON.parse(localStorage.getItem(user));
+            if ((role === "staff" && user === "admin" && pass === "staff123") || (stored && stored.password === pass && stored.role === role)) {
                 window.location.href = (role === "staff") ? "schedule.html" : "customer.html";
-            } 
-            else {
+            } else {
                 error.innerText = "ACCESS DENIED: Invalid Credentials";
                 error.style.display = "block";
             }
