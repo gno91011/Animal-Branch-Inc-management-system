@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animal Branch Inc. | Gateway</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 380px; text-align: center; border: 1px solid #ddd; }
+        .company-logo { width: 220px; margin-bottom: 20px; }
+        input, select { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 95%; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <img src="Screenshot 2026-01-28 104451.png" alt="Animal Branch Logo" class="company-logo">
+    <h2>System Login</h2>
+    <select id="role">
+        <option value="staff">Employee / Manager</option>
+        <option value="owner">Customer</option>
+    </select>
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="pass" placeholder="Password">
+    <button onclick="login()">Sign In</button>
+</div>
+<script>
+    function login() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        const role = document.getElementById('role').value;
+        if (email !== "" && pass !== "") {
+            window.location.href = (role === 'staff') ? "schedule.html" : "customer.html";
+        } else {
+            alert("Please enter credentials.");
+        }
+    }
+</script>
+</body>
+</html>
