@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Staff Schedule | Animal Branch</title>
+    <title>Management Dashboard | Animal Branch</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; margin: 0; }
         nav { background: #2c3e50; padding: 15px; color: white; display: flex; justify-content: space-between; }
         nav a { color: white; text-decoration: none; font-weight: bold; }
-        .container { padding: 20px; max-width: 1000px; margin: auto; }
+        .container { padding: 20px; max-width: 1100px; margin: auto; }
         .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
         table { width: 100%; border-collapse: collapse; background: white; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: #34495e; color: white; }
+        .contact-link { color: #2980b9; text-decoration: none; font-weight: bold; }
+        select { padding: 5px; border-radius: 3px; }
+        .btn-assign { background: #3498db; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 3px; }
     </style>
 </head>
 <body>
-<nav><span>Staff Dashboard</span><div><a href="billing.html" style="margin-right:20px;">Billing</a><a href="index.html">Logout</a></div></nav>
+<nav><span>Manager Dashboard</span><div><a href="billing.html" style="margin-right:20px;">Billing</a><a href="index.html">Logout</a></div></nav>
 <div class="container">
     <div class="card">
-        <h3>Daily Service Protocol</h3>
-        <ul><li>Confirm entry codes via database.</li><li>Verify food/water instructions.</li><li>Mark visits as completed for billing.</li></ul>
+        <h3>Team Directory</h3>
+        <table>
+            <thead><tr><th>ID #</th><th>Name</th><th>Phone</th><th>Email</th></tr></thead>
+            <tbody>
+                </tbody>
+        </table>
     </div>
-    <table>
-        <thead><tr><th>Time</th><th>Pet Name</th><th>Entry Code</th><th>Status</th></tr></thead>
-        <tbody>
-            </tbody>
-    </table>
+    <div class="card">
+        <h3>Task Assignments</h3>
+        <table>
+            <thead><tr><th>Requested Time</th><th>Pet Name</th><th>Service</th><th>Assign Staff</th></tr></thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>
