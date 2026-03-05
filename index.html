@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animal Branch Inc. | Home</title>
+    <style>
+        body { font-family: sans-serif; background: #eef2f3; padding: 20px; }
+        .nav { background: #2c3e50; padding: 10px; color: white; text-align: center; }
+        .nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+        .container { background: white; padding: 20px; max-width: 600px; margin: 20px auto; border-radius: 8px; border: 1px solid #ccc; }
+        input, textarea { width: 95%; padding: 8px; margin: 10px 0; }
+        button { background: #27ae60; color: white; padding: 10px; border: none; width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <a href="index.html">Home/Request</a>
+    <a href="schedule.html">Staff Schedule</a>
+    <a href="customer.html">Customer Portal</a>
+    <a href="billing.html">Billing</a>
+</div>
+
+<div class="container">
+    <h2>🐾 New Service Request Form</h2>
+    <p>Section 1.1 Requirement: Request care for your pet.</p>
+    <form onsubmit="alert('Request Sent to Jean Lussier!'); return false;">
+        <label>Pet Name:</label>
+        <input type="text" placeholder="e.g. Buddy" required>
+        
+        <label>Type of Service:</label>
+        <select style="width:100%; padding:8px; margin:10px 0;">
+            <option>Dog Walking</option>
+            <option>Cat Feeding</option>
+            <option>Overnight Stay</option>
+        </select>
+
+        <label>Notes for Home (Entry Codes/Key Location):</label>
+        <textarea placeholder="e.g. Key under blue rug, Lockbox 1234"></textarea>
+        
+        <button type="submit">Submit Request</button>
+    </form>
+</div>
+
+</body>
+</html>
