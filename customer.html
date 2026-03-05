@@ -9,7 +9,6 @@
         .main-content { max-width: 1000px; margin: 20px auto; padding: 20px; text-align: center; }
         .company-logo { width: 250px; margin-bottom: 20px; }
         .pop-gallery { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .img-container { text-align: center; }
         .pop-gallery img { width: 200px; height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; background: #fff; }
         .dashboard-grid { display: flex; gap: 20px; text-align: left; }
         .card { background: white; padding: 25px; border-radius: 8px; border: 1px solid #ddd; flex: 1; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
@@ -24,22 +23,22 @@
 <nav><strong>Animal Branch: Customer Portal</strong><a href="index.html">Logout</a></nav>
 <div class="main-content">
     <img src="Screenshot 2026-01-28 104451.png" alt="Company Logo" class="company-logo">
-    <h2 style="color: #2c3e50; margin-top: 20px;">Current Pet Profiles</h2>
+    <h2 style="color: #2c3e50; margin-top: 20px;">Welcome to Animal Branch</h2>
     <div class="pop-gallery">
-        <div class="img-container"><img src="istockphoto.png" alt="Pet 1"><p>Pet 1</p></div>
-        <div class="img-container"><img src="friendly-golden-retriever.png" alt="Pet 2"><p>Pet 2</p></div>
-        <div class="img-container"><img src="istockphoto_.png" alt="Pet 3"><p>Pet 3</p></div>
+        <img src="istockphoto.png" alt="Pet Image 1">
+        <img src="friendly-golden-retriever.png" alt="Pet Image 2">
+        <img src="istockphoto_.png" alt="Pet Image 3">
     </div>
     <div class="dashboard-grid">
         <div class="card">
-            <h3 style="margin-top:0;">Request New Appointment</h3>
+            <h3>New Service Request</h3>
             <input type="text" id="pName" placeholder="Pet Name">
             <input type="text" id="pService" placeholder="Service Needed">
-            <textarea id="pNotes" placeholder="Instructions"></textarea>
-            <button onclick="addRequest()">Submit Request</button>
+            <textarea id="pNotes" placeholder="Special Instructions"></textarea>
+            <button onclick="addRequest()">Submit to System</button>
         </div>
         <div class="card">
-            <h3 style="margin-top:0;">Appointment Review & History</h3>
+            <h3>Appointment Review</h3>
             <table>
                 <thead><tr><th>Date</th><th>Service</th><th>Status</th></tr></thead>
                 <tbody id="history-list"></tbody>
