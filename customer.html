@@ -25,7 +25,7 @@
     <img src="Screenshot 2026-01-28 104451.png" alt="Company Logo" class="company-logo">
     <h2 style="color: #2c3e50; margin-top: 20px;">Welcome to Animal Branch</h2>
     <div class="pop-gallery">
-        <img src="istockphoto.png" alt="Pet 1"><img src="friendly-golden-retriever.png" alt="Pet 2"><img src="istockphoto_.png" alt="Pet 3">
+        <img src="istockphoto.png" alt="Pet Image 1"><img src="friendly-golden-retriever.png" alt="Pet Image 2"><img src="istockphoto_.png" alt="Pet Image 3">
     </div>
     <div class="dashboard-grid">
         <div class="card">
@@ -51,10 +51,11 @@
         const name = document.getElementById('pName').value;
         const time = document.getElementById('pTime').value;
         const service = document.getElementById('pService').value;
-        if(!name || !time) return;
+        if(!name || !time) { alert("Please enter Pet Name and Time."); return; }
         const table = document.getElementById('history-list');
         const row = table.insertRow(0);
         row.innerHTML = `<td>${time.replace('T', ' ')}</td><td>${service} (${name})</td><td>Pending</td>`;
+        document.getElementById('pName').value = '';
     }
 </script>
 </body>
