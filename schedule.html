@@ -1,48 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Staff Dashboard | Animal Branch</title>
+    <title>Staff Schedule | Animal Branch</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; margin: 0; }
         nav { background: #2c3e50; padding: 10px; color: white; text-align: right; }
-        nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; }
-        .container { padding: 20px; max-width: 1000px; margin: auto; text-align: center; }
-        .main-logo { width: 300px; margin-bottom: 15px; }
-        .pop-gallery { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .pop-gallery img { width: 220px; height: 160px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; background: #fff; }
-        .protocol-card { background: white; border-left: 8px solid #27ae60; padding: 20px; text-align: left; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        nav a { color: white; margin-left: 20px; text-decoration: none; }
+        .container { padding: 20px; max-width: 1000px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: #34495e; color: white; }
     </style>
 </head>
 <body>
-    <nav>
-        <span style="float:left;">Employee Portal</span>
-        <a href="schedule.html">Schedule</a>
-        <a href="billing.html">Billing</a>
-        <a href="index.html" style="color: #e74c3c;">Logout</a>
-    </nav>
+    <nav><span style="float:left; padding-left:10px;">Staff Dashboard</span><a href="index.html">Logout</a></nav>
     <div class="container">
-        <img src="Screenshot 2026-01-28 104451.png" alt="Company Logo" class="main-logo">
-        <div class="pop-gallery">
-            <img src="istockphoto.png" alt="Pet 1">
-            <img src="friendly-golden-retriever.png" alt="Pet 2">
-            <img src="istockphoto_.png" alt="Pet 3">
-        </div>
-        <div class="protocol-card">
-            <h3>Standard Visit Protocols</h3>
+        <div class="card">
+            <h3>Today's Service Protocol</h3>
             <ul>
-                <li><strong>Access:</strong> Retrieve keys and verify entry code.</li>
-                <li><strong>Maintenance:</strong> Clean bowls; provide fresh food/water.</li>
-                <li><strong>Wellness:</strong> Visual health inspection of the pet.</li>
-                <li><strong>Exercise:</strong> 20-minute physical activity session.</li>
-                <li><strong>Security:</strong> Lock all doors and return keys to secure lockbox.</li>
+                <li>Verify home entry code.</li>
+                <li>Ensure fresh water is provided.</li>
+                <li>Complete 20-minute exercise session.</li>
+                <li>Secure property upon departure.</li>
             </ul>
         </div>
         <table>
             <thead>
-                <tr><th>Time</th><th>Pet Name</th><th>Entry Code</th><th>Status</th></tr>
+                <tr><th>Time</th><th>Pet Name</th><th>Code</th><th>Action</th></tr>
             </thead>
             <tbody>
                 </tbody>
