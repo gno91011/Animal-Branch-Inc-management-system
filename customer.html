@@ -3,52 +3,73 @@
 <head>
     <title>Customer Portal | Animal Branch</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; }
-        nav { background: #2c3e50; padding: 15px; color: white; display: flex; justify-content: space-between; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; }
+        nav { background: #2c3e50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
         nav a { color: #ecf0f1; text-decoration: none; font-weight: bold; }
-        .main-content { max-width: 1000px; margin: 20px auto; padding: 20px; text-align: center; }
+        .main-content { max-width: 1100px; margin: 20px auto; padding: 20px; text-align: center; }
         .company-logo { width: 250px; margin-bottom: 20px; }
         
-        /* RESTORED GALLERY */
-        .pop-gallery { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .pop-gallery img { width: 220px; height: 160px; object-fit: cover; border-radius: 10px; border: 2px solid #ddd; background: #fff; }
+        /* RESTORED: PHOTOGRAPHY GALLERY */
+        .pop-gallery { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
+        .pop-gallery img { width: 240px; height: 180px; object-fit: cover; border-radius: 12px; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        .dashboard-grid { display: flex; gap: 20px; text-align: left; }
-        .card { background: white; padding: 25px; border-radius: 8px; border: 1px solid #ddd; flex: 1; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        input, textarea, label { width: 100%; display: block; margin-top: 10px; }
-        input, textarea { padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        .dashboard-grid { display: flex; gap: 30px; text-align: left; }
+        .card { background: white; padding: 25px; border-radius: 10px; border: 1px solid #ddd; flex: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h3 { color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 8px; margin-top: 0; }
+        
+        input, select, textarea, label { width: 100%; display: block; margin-top: 12px; font-size: 0.95em; }
+        input, select, textarea { padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; background: #fafafa; }
+        button { width: 100%; padding: 14px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 1em; }
+        button:hover { background: #219150; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border-bottom: 1px solid #eee; padding: 10px; font-size: 0.9em; text-align: left; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; font-size: 0.9em; }
+        .status-tag { font-weight: bold; color: #2980b9; }
     </style>
 </head>
 <body onload="loadLocalHistory()">
-<nav><strong>Animal Branch: Customer Portal</strong><a href="index.html">Logout</a></nav>
+
+<nav>
+    <div style="font-size: 1.2em; font-weight: bold;">Animal Branch Portal</div>
+    <a href="index.html">Logout</a>
+</nav>
 
 <div class="main-content">
     <img src="Screenshot 2026-01-28 104451.png" alt="Company Logo" class="company-logo">
     
-    <h2 style="color: #2c3e50; margin-top: 10px;">Welcome to Animal Branch</h2>
+    <h2 style="color: #2c3e50;">Request Your Professional Pet Service</h2>
 
     <div class="pop-gallery">
-        <img src="istockphoto.png" alt="Pet Image 1">
-        <img src="friendly-golden-retriever.png" alt="Pet Image 2">
-        <img src="istockphoto_.png" alt="Pet Image 3">
+        <img src="istockphoto.png" alt="Service Image 1">
+        <img src="friendly-golden-retriever.png" alt="Service Image 2">
+        <img src="istockphoto_.png" alt="Service Image 3">
     </div>
 
     <div class="dashboard-grid">
         <div class="card">
-            <h3>New Service Request</h3>
-            <input type="text" id="pName" placeholder="Pet Name">
-            <input type="text" id="pService" placeholder="Service Needed">
-            <label style="font-size: 0.8em; color: #666;">Select Date & Time:</label>
+            <h3>Book a Service</h3>
+            <label>Pet Name:</label>
+            <input type="text" id="pName" placeholder="Enter Pet Name">
+            
+            <label>Select Service & Fixed Price:</label>
+            <select id="pService">
+                <option value="Dog Walking|$25.00">Dog Walking — $25.00</option>
+                <option value="Pet Grooming|$55.00">Pet Grooming — $55.00</option>
+                <option value="Overnight Stay|$85.00">Overnight Stay — $85.00</option>
+                <option value="Medical Admin|$30.00">Medical Administration — $30.00</option>
+            </select>
+
+            <label>Date & Time:</label>
             <input type="datetime-local" id="pTime">
-            <textarea id="pNotes" placeholder="Special Instructions"></textarea>
-            <button onclick="addRequest()">Log to System</button>
+            
+            <label>Instructions:</label>
+            <textarea id="pNotes" placeholder="Any allergies or special needs?"></textarea>
+            
+            <button onclick="addRequest()">Submit Service Request</button>
         </div>
 
         <div class="card">
-            <h3>My Requests</h3>
+            <h3>My Service History</h3>
             <table>
                 <thead><tr><th>Time</th><th>Service</th><th>Status</th></tr></thead>
                 <tbody id="history-list"></tbody>
@@ -61,15 +82,16 @@
     function addRequest() {
         const name = document.getElementById('pName').value;
         const time = document.getElementById('pTime').value;
-        const service = document.getElementById('pService').value;
+        const serviceData = document.getElementById('pService').value.split('|');
         
-        if(!name || !time) { alert("Please fill in the Pet Name and Time."); return; }
+        if(!name || !time) { alert("Please complete Pet Name and Appointment Time."); return; }
 
         const newAppt = { 
-            id: Date.now(), // Unique ID for Manager to track
+            id: Date.now(), 
             name: name, 
             time: time.replace('T', ' '), 
-            service: service,
+            service: serviceData[0], 
+            price: serviceData[1], // Store the price for billing
             assignedTo: "None",
             status: "Pending" 
         };
@@ -78,7 +100,7 @@
         appointments.push(newAppt);
         localStorage.setItem('animalBranch_data', JSON.stringify(appointments));
 
-        alert("Request Sent to Manager.");
+        alert("Success! " + serviceData[0] + " has been requested for " + name);
         location.reload(); 
     }
 
@@ -88,7 +110,7 @@
         table.innerHTML = "";
         data.reverse().forEach(appt => {
             let row = table.insertRow();
-            row.innerHTML = `<td>${appt.time}</td><td>${appt.service}</td><td><strong>${appt.status}</strong></td>`;
+            row.innerHTML = `<td>${appt.time}</td><td>${appt.service}</td><td><span class="status-tag">${appt.status}</span></td>`;
         });
     }
 </script>
