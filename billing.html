@@ -1,28 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Billing | Animal Branch</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; }
-        nav { background: #2c3e50; padding: 15px; color: white; text-align: right; }
-        nav a { color: white; text-decoration: none; font-weight: bold; margin-left: 20px; }
-        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 8px; border: 1px solid #ddd; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; }
-    </style>
-</head>
-<body>
-<nav><a href="schedule.html">Schedule</a><a href="index.html">Logout</a></nav>
 <div class="container">
     <div class="card">
-        <h2>System Invoices</h2>
+        <h2>Service Billing & Invoices</h2>
         <table>
-            <thead><tr><th>Date</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
-            <tbody>
-                </tbody>
+            <thead>
+                <tr><th>Date</th><th>Pet Name</th><th>Service</th><th>Total Due</th></tr>
+            </thead>
+            <tbody id="billing-table"></tbody>
         </table>
+        <h3 id="total-revenue" style="text-align: right; color: #27ae60;">Total: $0.00</h3>
     </div>
 </div>
-</body>
-</html>
+
+<script>
+    function loadBilling() {
+        const table = document.getElementById('billing-table');
+        const billingData = JSON.parse(localStorage.getItem('animalBranch_billing') || "[]");
+        let total = 0;
+
+        billingData.forEach(item => {
+            let row = table.insertRow();
+            row.innerHTML = `<td>${item.date}</td><td>${item.pet}</td><td>${item.service}</td><td><strong>${item.amount}</strong></td>`;
+            total += parseFloat(item.amount.replace('$', ''));
+        });
+        document.getElementById('total-revenue').innerText = "Total Balance: $" + total.toFixed(2);
+    }
+    window.onload = loadBilling;
+</script>
