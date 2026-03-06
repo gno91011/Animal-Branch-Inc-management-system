@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer Booking Page</title>
+    <title>Customer Portal</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: white; padding: 20px; text-align: center; }
         .nav-bar { background-color: #333; color: white; padding: 10px; margin-bottom: 20px; }
-        .nav-bar a { color: white; text-decoration: none; margin-left: 15px; }
+        .nav-bar a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; }
         
-        /* Company Logo at the very top */
         .logo-container img { width: 150px; margin-bottom: 10px; }
-        
-        /* 3 Photos in a row */
         .photo-row img { width: 200px; height: 150px; border: 1px solid black; margin: 10px; }
         
         .booking-form { 
@@ -45,11 +42,12 @@
 
 <div class="nav-bar">
     <strong>Animal Branch: Customer Portal</strong>
-    <a href="index.html">Logout</a>
+    <a href="billing.html">View My Bills</a>
+    <a href="index.html" style="color: red;">Logout</a>
 </div>
 
 <div class="logo-container">
-    <img src="Screenshot 2026-01-28 104451.png" alt="Animal Branch Logo">
+    <img src="Screenshot 2026-01-28 104451.png" alt="Logo">
 </div>
 
 <h1>Book a Service</h1>
@@ -64,14 +62,14 @@
     <label>Pet Name:</label>
     <input type="text" id="pName">
 
-    <label>Service Address:</label>
-    <input type="text" id="pAddress" placeholder="Street, City, Zip">
-
     <label>Phone Number:</label>
-    <input type="text" id="pPhone">
+    <input type="text" id="pPhone" placeholder="555-0123">
 
     <label>Email Address:</label>
-    <input type="text" id="pEmail">
+    <input type="text" id="pEmail" placeholder="name@email.com">
+
+    <label>Service Address:</label>
+    <input type="text" id="pAddress" placeholder="123 Main St, Apt 4">
 
     <label>Select Service:</label>
     <select id="pService">
@@ -84,7 +82,7 @@
     <input type="datetime-local" id="pTime">
 
     <label>Comments for Employee:</label>
-    <textarea id="pComments" rows="3"></textarea>
+    <textarea id="pComments" rows="3" placeholder="Gate code is 1234..."></textarea>
 
     <button class="submit-button" onclick="sendRequest()">Submit Request</button>
 </div>
@@ -106,24 +104,25 @@
 <script>
     function sendRequest() {
         const name = document.getElementById('pName').value;
-        const address = document.getElementById('pAddress').value;
         const phone = document.getElementById('pPhone').value;
         const email = document.getElementById('pEmail').value;
+        const address = document.getElementById('pAddress').value;
         const time = document.getElementById('pTime').value;
         const comments = document.getElementById('pComments').value;
         const serviceData = document.getElementById('pService').value.split('|');
 
-        if(!name || !address || !phone || !time) {
-            alert("Please fill out Name, Address, Phone, and Time");
+        if(!name || !phone || !email || !address || !time) {
+            alert("Please fill out all contact and service info!");
             return;
         }
 
         const newRequest = {
             id: Date.now(),
+            customerUser: localStorage.getItem('logged_in_user'),
             name: name,
-            address: address,
             phone: phone,
             email: email,
+            address: address,
             service: serviceData[0],
             price: serviceData[1],
             time: time,
@@ -136,15 +135,19 @@
         data.push(newRequest);
         localStorage.setItem('animalBranch_data', JSON.stringify(data));
 
-        alert("Request logged for " + name);
+        alert("Request sent for " + name);
         location.reload();
     }
 
     function loadHistory() {
         const table = document.getElementById('historyTable');
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
+        const currentUser = localStorage.getItem('logged_in_user');
         
-        data.forEach(item => {
+        // Only show requests for this specific logged-in customer
+        const myData = data.filter(item => item.customerUser === currentUser);
+        
+        myData.forEach(item => {
             let row = table.insertRow();
             row.innerHTML = `<td>${item.name}</td><td>${item.service}</td><td>${item.time}</td><td>${item.status}</td>`;
         });
