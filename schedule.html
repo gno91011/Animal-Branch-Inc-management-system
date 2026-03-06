@@ -1,59 +1,60 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
-    <title>Manager Page</title>
+    <title>Manager Dashboard</title>
     <style>
         body { font-family: "Times New Roman", serif; background-color: white; padding: 20px; }
-        nav { border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px; }
-        .section { border: 1px solid black; padding: 15px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #eeeeee; }
-        .logout { color: red; font-weight: bold; }
+        nav { border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        nav a { margin: 0 15px; text-decoration: none; color: blue; font-weight: bold; }
+        
+        .logo-center { text-align: center; margin-bottom: 10px; }
+        .section { border: 1px solid black; padding: 15px; margin-bottom: 25px; background-color: #fcfcfc; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; font-size: 14px; }
+        th { background-color: #dddddd; }
+        
+        .logout { color: red !important; }
+        .money-text { color: green; font-weight: bold; }
     </style>
 </head>
-<body onload="init()">
+<body onload="initManager()">
+
+<div class="logo-center">
+    <img src="Screenshot 2026-01-28 104451.png" alt="Logo" width="120">
+</div>
 
 <nav>
-    <strong>Animal Branch Manager Menu</strong> | 
-    <a href="billing.html">Billing</a> | 
+    <strong>Manager Control Panel</strong> | 
     <a href="customer.html">Customer View</a> | 
     <a href="index.html" class="logout">LOGOUT</a>
 </nav>
 
-<h1>Manager Dashboard</h1>
+<h1>Management Oversight</h1>
 
 <div class="section">
-    <h3>Staff List</h3>
-    <table id="staffTable">
-        <thead><tr><th>Username</th><th>Status</th></tr></thead>
-        <tbody id="staffBody"></tbody>
-    </table>
-</div>
-
-<div class="section">
-    <h3>New Customer Requests</h3>
-    <table id="requestTable">
+    <h3>New Requests (Awaiting Assignment)</h3>
+    <table id="reqTable">
         <thead>
             <tr>
-                <th>Pet & Phone</th>
+                <th>Pet & Owner Contact</th>
                 <th>Service & Address</th>
-                <th>Owner Comments</th>
-                <th>Assign To</th>
+                <th>Comments</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody id="requestBody"></tbody>
+        <tbody id="reqBody"></tbody>
     </table>
 </div>
 
 <div class="section">
-    <h3>Assignment Tracking</h3>
+    <h3>Live Work Tracking</h3>
     <table id="trackTable">
         <thead>
             <tr>
                 <th>Pet Name</th>
-                <th>Address</th>
-                <th>Assigned Staff</th>
+                <th>Staff Member</th>
+                <th>Location</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -61,57 +62,88 @@
     </table>
 </div>
 
-<script>
-    function init() {
-        const staffBody = document.getElementById('staffBody');
-        const requestBody = document.getElementById('requestBody');
-        const trackBody = document.getElementById('trackBody');
-        let staffNames = [];
+<div class="section" style="border: 2px solid green;">
+    <h3>Billing & Revenue Review</h3>
+    <p>This list shows all services that have been completed and billed to customers.</p>
+    <table id="billTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Pet</th>
+                <th>Service Type</th>
+                <th>Amount Billed</th>
+            </tr>
+        </thead>
+        <tbody id="billBody"></tbody>
+    </table>
+    <h3 style="text-align: right;">Total Business Revenue: <span id="revenueTotal" class="money-text">$0.00</span></h3>
+</div>
 
-        // Find Staff
+<script>
+    function initManager() {
+        const reqBody = document.getElementById('reqBody');
+        const trackBody = document.getElementById('trackBody');
+        const billBody = document.getElementById('billBody');
+        
+        let staffNames = [];
+        
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             try {
                 const user = JSON.parse(localStorage.getItem(key));
-                if (user.role === 'staff') {
-                    staffNames.push(user.username);
-                    staffBody.innerHTML += "<tr><td>" + user.username + "</td><td>Active</td></tr>";
-                }
+                if (user.role === 'staff') { staffNames.push(user.username); }
             } catch(e) {}
         }
 
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
+        const billing = JSON.parse(localStorage.getItem('animalBranch_billing') || "[]");
+
+        // Populate Requests and Tracking
         data.forEach(appt => {
             if (appt.status === "Pending") {
-                let options = staffNames.map(name => "<option value='"+name+"'>"+name+"</option>").join('');
-                requestBody.innerHTML += `
+                let options = staffNames.map(n => `<option value="${n}">${n}</option>`).join('');
+                reqBody.innerHTML += `
                     <tr>
-                        <td>${appt.name}<br>(${appt.phone})</td>
+                        <td><strong>${appt.name}</strong><br>Ph: ${appt.phone}<br>Em: ${appt.email}</td>
                         <td>${appt.service}<br>${appt.address}</td>
                         <td>${appt.comments || "None"}</td>
                         <td>
                             <select id="sel-${appt.id}">${options}</select>
-                            <button onclick="assign(${appt.id})">Assign Now</button>
+                            <button onclick="assign(${appt.id})">Assign</button>
                         </td>
                     </tr>`;
             } else {
                 trackBody.innerHTML += `
                     <tr>
                         <td>${appt.name}</td>
-                        <td>${appt.address}</td>
                         <td>${appt.assignedTo}</td>
+                        <td>${appt.address}</td>
                         <td>${appt.status}</td>
                     </tr>`;
             }
         });
+
+        // Populate Billing Review
+        let totalRev = 0;
+        billing.forEach(item => {
+            billBody.innerHTML += `
+                <tr>
+                    <td>${item.date}</td>
+                    <td>${item.pet}</td>
+                    <td>${item.service}</td>
+                    <td class="money-text">${item.amount}</td>
+                </tr>`;
+            totalRev += parseFloat(item.amount.replace('$', ''));
+        });
+        document.getElementById('revenueTotal').innerText = "$" + totalRev.toFixed(2);
     }
 
     function assign(id) {
         let data = JSON.parse(localStorage.getItem('animalBranch_data'));
-        const staffName = document.getElementById("sel-" + id).value;
-        const index = data.findIndex(a => a.id === id);
-        data[index].status = "Assigned";
-        data[index].assignedTo = staffName;
+        const staff = document.getElementById("sel-" + id).value;
+        const idx = data.findIndex(a => a.id === id);
+        data[idx].status = "Assigned";
+        data[idx].assignedTo = staff;
         localStorage.setItem('animalBranch_data', JSON.stringify(data));
         location.reload();
     }
