@@ -1,54 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Staff Tasks | Animal Branch</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd; max-width: 800px; margin: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
-        .btn-complete { background: #27ae60; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 4px; }
-    </style>
-</head>
-<body onload="loadStaffTasks()">
-    <div class="card">
-        <h2>My Assigned Tasks</h2>
-        <p>Logged in as: <strong id="current-user">Sarah Jenkins</strong></p>
-        <table>
-            <thead><tr><th>Pet</th><th>Service</th><th>Time</th><th>Action</th></tr></thead>
-            <tbody id="staff-table"></tbody>
-        </table>
-        <br><a href="index.html">Logout</a>
-    </div>
-
 <script>
-    function loadStaffTasks() {
-        const currentUser = document.getElementById('current-user').innerText;
-        const table = document.getElementById('staff-table');
-        const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
-        table.innerHTML = "";
-
-        // Show only jobs assigned to THIS staff member that are NOT completed
-        data.filter(a => a.assignedTo === currentUser && a.status === "Assigned").forEach(appt => {
-            let row = table.insertRow();
-            row.innerHTML = `
-                <td>${appt.name}</td>
-                <td>${appt.service}</td>
-                <td>${appt.time}</td>
-                <td><button class="btn-complete" onclick="completeJob(${appt.id})">Complete Service</button></td>
-            `;
-        });
-    }
-
     function completeJob(apptId) {
         let data = JSON.parse(localStorage.getItem('animalBranch_data'));
         const index = data.findIndex(a => a.id === apptId);
-        data[index].status = "Completed"; // Mark as finished
+        
+        data[index].status = "Completed"; 
 
+        // CREATE BILLING RECORD
+        let billing = JSON.parse(localStorage.getItem('animalBranch_billing') || "[]");
+        billing.push({
+            date: new Date().toLocaleDateString(),
+            pet: data[index].name,
+            service: data[index].service,
+            amount: data[index].price,
+            staff: data[index].assignedTo
+        });
+        
+        localStorage.setItem('animalBranch_billing', JSON.stringify(billing));
         localStorage.setItem('animalBranch_data', JSON.stringify(data));
-        alert("Service Logged as Completed!");
+        
+        alert("Service Completed! Billing info sent to system.");
         loadStaffTasks();
     }
 </script>
-</body>
-</html>
