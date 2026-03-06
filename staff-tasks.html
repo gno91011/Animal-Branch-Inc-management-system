@@ -1,11 +1,83 @@
-<script>
-    function completeJob(apptId) {
-        let data = JSON.parse(localStorage.getItem('animalBranch_data'));
-        const index = data.findIndex(a => a.id === apptId);
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Task Portal | Animal Branch</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; }
+        nav { background: #27ae60; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; font-weight: bold; border: 1px solid white; padding: 5px 15px; border-radius: 4px; }
         
-        data[index].status = "Completed"; 
+        .container { padding: 40px; max-width: 900px; margin: auto; }
+        .welcome-header { margin-bottom: 30px; border-bottom: 2px solid #27ae60; padding-bottom: 10px; }
+        
+        .task-card { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 8px solid #3498db; }
+        .task-info h2 { margin: 0; color: #2c3e50; font-size: 1.4em; }
+        .task-info p { margin: 5px 0; color: #7f8c8d; }
+        .price-tag { background: #e8f5e9; color: #27ae60; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.9em; }
 
-        // CREATE BILLING RECORD
+        .btn-complete { background: #27ae60; color: white; border: none; padding: 12px 25px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 1em; }
+        .btn-complete:hover { background: #219150; }
+        .empty-state { text-align: center; padding: 50px; color: #999; font-style: italic; }
+    </style>
+</head>
+<body onload="loadMyTasks()">
+
+<nav>
+    <div style="font-size: 1.2em; font-weight: bold;">Animal Branch: Staff Portal</div>
+    <a href="index.html">Logout</a>
+</nav>
+
+<div class="container">
+    <div class="welcome-header">
+        <h1>Active Assignments</h1>
+        <p>Logged in as: <span id="staff-name-display" style="font-weight: bold; color: #27ae60;"></span></p>
+    </div>
+
+    <div id="task-list-container">
+        </div>
+</div>
+
+<script>
+    function loadMyTasks() {
+        // 1. Identify who is logged in (pulled from LocalStorage set during login)
+        const currentUser = localStorage.getItem('logged_in_user');
+        document.getElementById('staff-name-display').innerText = currentUser;
+
+        const container = document.getElementById('task-list-container');
+        const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
+        
+        container.innerHTML = "";
+
+        // 2. Filter data: only show jobs ASSIGNED to this specific username that are NOT completed
+        const myTasks = data.filter(appt => appt.assignedTo === currentUser && appt.status === "Assigned");
+
+        if (myTasks.length === 0) {
+            container.innerHTML = "<div class='empty-state'>You have no active assignments at the moment.</div>";
+        } else {
+            myTasks.forEach(task => {
+                const card = document.createElement('div');
+                card.className = 'task-card';
+                card.innerHTML = `
+                    <div class="task-info">
+                        <h2>${task.name} <span class="price-tag">${task.price}</span></h2>
+                        <p><strong>Service:</strong> ${task.service}</p>
+                        <p><strong>Scheduled:</strong> ${task.time}</p>
+                    </div>
+                    <button class="btn-complete" onclick="markAsFinished(${task.id})">Complete & Bill Customer</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+    }
+
+    function markAsFinished(taskId) {
+        let data = JSON.parse(localStorage.getItem('animalBranch_data'));
+        const index = data.findIndex(t => t.id === taskId);
+        
+        // Update Status
+        data[index].status = "Completed";
+
+        // Generate Billing Entry
         let billing = JSON.parse(localStorage.getItem('animalBranch_billing') || "[]");
         billing.push({
             date: new Date().toLocaleDateString(),
@@ -14,11 +86,13 @@
             amount: data[index].price,
             staff: data[index].assignedTo
         });
-        
-        localStorage.setItem('animalBranch_billing', JSON.stringify(billing));
+
         localStorage.setItem('animalBranch_data', JSON.stringify(data));
-        
-        alert("Service Completed! Billing info sent to system.");
-        loadStaffTasks();
+        localStorage.setItem('animalBranch_billing', JSON.stringify(billing));
+
+        alert("Job Completed! The invoice has been sent to the billing system.");
+        loadMyTasks(); // Refresh the list
     }
 </script>
+</body>
+</html>
