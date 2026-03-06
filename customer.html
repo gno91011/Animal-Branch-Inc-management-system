@@ -9,7 +9,7 @@
         .main-content { max-width: 1000px; margin: 20px auto; padding: 20px; text-align: center; }
         .company-logo { width: 250px; margin-bottom: 20px; }
         
-        /* RESTORED GALLERY STYLING */
+        /* RESTORED GALLERY */
         .pop-gallery { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
         .pop-gallery img { width: 220px; height: 160px; object-fit: cover; border-radius: 10px; border: 2px solid #ddd; background: #fff; }
         
@@ -20,10 +20,9 @@
         button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border-bottom: 1px solid #eee; padding: 10px; font-size: 0.9em; text-align: left; }
-        th { background: #f8f9fa; color: #2c3e50; }
     </style>
 </head>
-<body>
+<body onload="loadLocalHistory()">
 <nav><strong>Animal Branch: Customer Portal</strong><a href="index.html">Logout</a></nav>
 
 <div class="main-content">
@@ -49,11 +48,10 @@
         </div>
 
         <div class="card">
-            <h3>Appointment Review</h3>
+            <h3>My Requests</h3>
             <table>
                 <thead><tr><th>Time</th><th>Service</th><th>Status</th></tr></thead>
-                <tbody id="history-list">
-                    </tbody>
+                <tbody id="history-list"></tbody>
             </table>
         </div>
     </div>
@@ -67,21 +65,31 @@
         
         if(!name || !time) { alert("Please fill in the Pet Name and Time."); return; }
 
-        // Create appointment object for the "Database"
-        const newAppt = { name, time: time.replace('T', ' '), service };
+        const newAppt = { 
+            id: Date.now(), // Unique ID for Manager to track
+            name: name, 
+            time: time.replace('T', ' '), 
+            service: service,
+            assignedTo: "None",
+            status: "Pending" 
+        };
 
-        // 1. SAVE to System Memory (LocalStorage)
-        let appointments = JSON.parse(localStorage.getItem('global_appointments') || "[]");
+        let appointments = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
         appointments.push(newAppt);
-        localStorage.setItem('global_appointments', JSON.stringify(appointments));
+        localStorage.setItem('animalBranch_data', JSON.stringify(appointments));
 
-        // 2. SHOW on the screen immediately
+        alert("Request Sent to Manager.");
+        location.reload(); 
+    }
+
+    function loadLocalHistory() {
         const table = document.getElementById('history-list');
-        const row = table.insertRow(0);
-        row.innerHTML = `<td>${newAppt.time}</td><td>${newAppt.service} (${newAppt.name})</td><td><span style="color:green">Logged</span></td>`;
-        
-        alert("Information logged to system database.");
-        document.getElementById('pName').value = '';
+        const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
+        table.innerHTML = "";
+        data.reverse().forEach(appt => {
+            let row = table.insertRow();
+            row.innerHTML = `<td>${appt.time}</td><td>${appt.service}</td><td><strong>${appt.status}</strong></td>`;
+        });
     }
 </script>
 </body>
