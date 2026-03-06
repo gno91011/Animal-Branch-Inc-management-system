@@ -1,149 +1,120 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Management Dashboard | Animal Branch Inc.</title>
+    <title>Manager Page</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; color: #333; }
-        
-        nav { background: #2c3e50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        nav .brand { font-size: 1.4em; font-weight: bold; letter-spacing: 1px; }
-        nav .links a { color: #ecf0f1; text-decoration: none; font-weight: bold; margin-left: 20px; transition: 0.3s; }
-        nav .links a:hover { color: #27ae60; }
-        nav .logout-btn { color: #e74c3c !important; border: 1px solid #e74c3c; padding: 5px 15px; border-radius: 4px; }
-        nav .logout-btn:hover { background: #e74c3c; color: white !important; }
-
-        .container { padding: 30px; max-width: 1100px; margin: auto; }
-        .card { background: white; padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h3 { margin-top: 0; color: #2c3e50; border-left: 5px solid #27ae60; padding-left: 15px; }
-        
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 15px; }
-        th, td { border: 1px solid #eee; padding: 15px; text-align: left; }
-        th { background: #f8f9fa; color: #2c3e50; font-weight: 600; text-transform: uppercase; font-size: 0.85em; }
-        
-        .btn-assign { background: #27ae60; color: white; border: none; padding: 8px 20px; cursor: pointer; border-radius: 4px; font-weight: bold; }
-        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 180px; }
-        
-        .status-assigned { color: #2980b9; font-weight: bold; }
-        .status-completed { color: #27ae60; font-weight: bold; }
-        .empty-msg { text-align: center; color: #999; padding: 20px; font-style: italic; }
+        body { font-family: "Times New Roman", serif; background-color: white; padding: 20px; }
+        nav { border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px; }
+        .section { border: 1px solid black; padding: 15px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #eeeeee; }
+        .logout { color: red; font-weight: bold; }
     </style>
 </head>
-<body onload="initManagerDashboard()">
+<body onload="init()">
 
 <nav>
-    <div class="brand">Animal Branch: Management</div>
-    <div class="links">
-        <a href="billing.html">Billing</a>
-        <a href="customer.html">Customer View</a>
-        <a href="index.html" class="logout-btn">Logout</a>
-    </div>
+    <strong>Animal Branch Manager Menu</strong> | 
+    <a href="billing.html">Billing</a> | 
+    <a href="customer.html">Customer View</a> | 
+    <a href="index.html" class="logout">LOGOUT</a>
 </nav>
 
-<div class="container">
+<h1>Manager Dashboard</h1>
 
-    <div class="card">
-        <h3>Staff Directory</h3>
-        <table>
-            <thead><tr><th>Username</th><th>Role</th><th>System Status</th></tr></thead>
-            <tbody id="staff-list"></tbody>
-        </table>
-    </div>
+<div class="section">
+    <h3>Staff List</h3>
+    <table id="staffTable">
+        <thead><tr><th>Username</th><th>Status</th></tr></thead>
+        <tbody id="staffBody"></tbody>
+    </table>
+</div>
 
-    <div class="card">
-        <h3>New Requests (Awaiting Assignment)</h3>
-        <table>
-            <thead>
-                <tr><th>Time</th><th>Pet Name</th><th>Service</th><th>Assign Staff</th></tr>
-            </thead>
-            <tbody id="pending-queue"></tbody>
-        </table>
-    </div>
+<div class="section">
+    <h3>New Customer Requests</h3>
+    <table id="requestTable">
+        <thead>
+            <tr>
+                <th>Pet & Phone</th>
+                <th>Service & Address</th>
+                <th>Owner Comments</th>
+                <th>Assign To</th>
+            </tr>
+        </thead>
+        <tbody id="requestBody"></tbody>
+    </table>
+</div>
 
-    <div class="card" style="border-left: 5px solid #2980b9;">
-        <h3>Live Assignment Tracking</h3>
-        <p style="font-size: 0.8em; color: #666;">Monitor which staff members are currently handling specific tasks.</p>
-        <table>
-            <thead>
-                <tr><th>Pet Name</th><th>Service</th><th>Assigned To</th><th>Current Status</th></tr>
-            </thead>
-            <tbody id="tracking-log"></tbody>
-        </table>
-    </div>
-
+<div class="section">
+    <h3>Assignment Tracking</h3>
+    <table id="trackTable">
+        <thead>
+            <tr>
+                <th>Pet Name</th>
+                <th>Address</th>
+                <th>Assigned Staff</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="trackBody"></tbody>
+    </table>
 </div>
 
 <script>
-    function initManagerDashboard() {
-        const staffBody = document.getElementById('staff-list');
-        const pendingBody = document.getElementById('pending-queue');
-        const trackingBody = document.getElementById('tracking-log');
-        
-        let currentStaff = [];
-        staffBody.innerHTML = "";
-        pendingBody.innerHTML = "";
-        trackingBody.innerHTML = "";
+    function init() {
+        const staffBody = document.getElementById('staffBody');
+        const requestBody = document.getElementById('requestBody');
+        const trackBody = document.getElementById('trackBody');
+        let staffNames = [];
 
-        // LOAD STAFF
+        // Find Staff
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             try {
                 const user = JSON.parse(localStorage.getItem(key));
                 if (user.role === 'staff') {
-                    currentStaff.push(user.username);
-                    staffBody.insertRow().innerHTML = `<td><strong>${user.username}</strong></td><td>${user.role}</td><td><span style="color:green">● Active</span></td>`;
+                    staffNames.push(user.username);
+                    staffBody.innerHTML += "<tr><td>" + user.username + "</td><td>Active</td></tr>";
                 }
             } catch(e) {}
         }
-        if(currentStaff.length === 0) staffBody.innerHTML = "<tr><td colspan='3' class='empty-msg'>No staff registered.</td></tr>";
 
-        // LOAD ALL APPOINTMENTS
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
-
-        // Sort into Pending vs Assigned/Completed
         data.forEach(appt => {
             if (appt.status === "Pending") {
-                let options = currentStaff.length > 0 
-                    ? currentStaff.map(name => `<option value="${name}">${name}</option>`).join('')
-                    : `<option disabled>Register staff first</option>`;
-                
-                let row = pendingBody.insertRow();
-                row.innerHTML = `
-                    <td>${appt.time}</td>
-                    <td>${appt.name}</td>
-                    <td>${appt.service}</td>
-                    <td>
-                        <select id="sel-${appt.id}">${options}</select>
-                        <button class="btn-assign" onclick="confirmAssign(${appt.id})">Assign</button>
-                    </td>`;
+                let options = staffNames.map(name => "<option value='"+name+"'>"+name+"</option>").join('');
+                requestBody.innerHTML += `
+                    <tr>
+                        <td>${appt.name}<br>(${appt.phone})</td>
+                        <td>${appt.service}<br>${appt.address}</td>
+                        <td>${appt.comments || "None"}</td>
+                        <td>
+                            <select id="sel-${appt.id}">${options}</select>
+                            <button onclick="assign(${appt.id})">Assign Now</button>
+                        </td>
+                    </tr>`;
             } else {
-                // Tracking Log for Assigned and Completed
-                let statusClass = appt.status === "Completed" ? "status-completed" : "status-assigned";
-                let row = trackingBody.insertRow();
-                row.innerHTML = `
-                    <td><strong>${appt.name}</strong></td>
-                    <td>${appt.service}</td>
-                    <td>${appt.assignedTo}</td>
-                    <td><span class="${statusClass}">${appt.status}</span></td>`;
+                trackBody.innerHTML += `
+                    <tr>
+                        <td>${appt.name}</td>
+                        <td>${appt.address}</td>
+                        <td>${appt.assignedTo}</td>
+                        <td>${appt.status}</td>
+                    </tr>`;
             }
         });
-
-        if (pendingBody.innerHTML === "") pendingBody.innerHTML = "<tr><td colspan='4' class='empty-msg'>No new requests.</td></tr>";
-        if (trackingBody.innerHTML === "") trackingBody.innerHTML = "<tr><td colspan='4' class='empty-msg'>No active assignments to track.</td></tr>";
     }
 
-    function confirmAssign(apptId) {
+    function assign(id) {
         let data = JSON.parse(localStorage.getItem('animalBranch_data'));
-        const staffName = document.getElementById(`sel-${apptId}`).value;
-        const index = data.findIndex(a => a.id === apptId);
-        
+        const staffName = document.getElementById("sel-" + id).value;
+        const index = data.findIndex(a => a.id === id);
         data[index].status = "Assigned";
         data[index].assignedTo = staffName;
-
         localStorage.setItem('animalBranch_data', JSON.stringify(data));
-        alert("Success: " + staffName + " is now tracking this task.");
-        initManagerDashboard();
+        location.reload();
     }
 </script>
-
 </body>
 </html>
