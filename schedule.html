@@ -11,30 +11,52 @@
         table { width: 100%; border-collapse: collapse; background: white; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: #34495e; color: white; }
-        .contact-link { color: #2980b9; text-decoration: none; font-weight: bold; }
-        select { padding: 5px; border-radius: 3px; }
         .btn-assign { background: #3498db; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 3px; }
     </style>
 </head>
-<body>
+<body onload="loadData()">
 <nav><span>Manager Dashboard</span><div><a href="billing.html" style="margin-right:20px;">Billing</a><a href="index.html">Logout</a></div></nav>
 <div class="container">
+    
     <div class="card">
-        <h3>Team Directory</h3>
+        <h3>Staff Member Log</h3>
+        <p style="font-size: 0.8em; color: #666;">Note: Staff appear here once they register an account.</p>
         <table>
-            <thead><tr><th>ID #</th><th>Name</th><th>Phone</th><th>Email</th></tr></thead>
-            <tbody>
-                </tbody>
+            <thead><tr><th>Username</th><th>Role</th><th>System Status</th></tr></thead>
+            <tbody id="staff-log-table"></tbody>
         </table>
     </div>
+
     <div class="card">
-        <h3>Task Assignments</h3>
+        <h3>Appointment Log (Global)</h3>
         <table>
-            <thead><tr><th>Requested Time</th><th>Pet Name</th><th>Service</th><th>Assign Staff</th></tr></thead>
-            <tbody>
-                </tbody>
+            <thead><tr><th>Time</th><th>Pet Name</th><th>Service</th><th>Staff Assigned</th></tr></thead>
+            <tbody id="master-appointment-table"></tbody>
         </table>
     </div>
 </div>
+
+<script>
+    function loadData() {
+        // 1. Load Staff from LocalStorage
+        const staffTable = document.getElementById('staff-log-table');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const data = JSON.parse(localStorage.getItem(key));
+            if (data.role === "staff") {
+                let row = staffTable.insertRow();
+                row.innerHTML = `<td>${data.username}</td><td>${data.role}</td><td>Active</td>`;
+            }
+        }
+
+        // 2. Load Appointments from LocalStorage
+        const apptTable = document.getElementById('master-appointment-table');
+        const appointments = JSON.parse(localStorage.getItem('global_appointments') || "[]");
+        appointments.forEach(appt => {
+            let row = apptTable.insertRow();
+            row.innerHTML = `<td>${appt.time}</td><td>${appt.name}</td><td>${appt.service}</td><td>Unassigned</td>`;
+        });
+    }
+</script>
 </body>
 </html>
