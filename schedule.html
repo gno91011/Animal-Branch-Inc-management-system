@@ -1,110 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Management Dashboard | Animal Branch Inc.</title>
+    <title>Manager Command Center | Animal Branch</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; color: #333; }
-        nav { background: #2c3e50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        nav a { color: #ecf0f1; text-decoration: none; font-weight: bold; margin-left: 20px; transition: 0.3s; }
-        nav a:hover { color: #27ae60; }
-        
-        .container { padding: 30px; max-width: 1200px; margin: auto; }
-        .card { background: white; padding: 25px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 10px; display: inline-block; }
-        
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 15px; }
-        th, td { border: 1px solid #eee; padding: 15px; text-align: left; }
-        th { background: #f8f9fa; color: #2c3e50; font-weight: 600; text-transform: uppercase; font-size: 0.85em; }
-        
-        .contact-link { color: #2980b9; text-decoration: none; font-weight: bold; }
-        .btn-assign { background: #27ae60; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
-        .btn-assign:hover { background: #219150; transform: translateY(-1px); }
-        
-        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 160px; }
-        .protocol-list { line-height: 1.8; color: #555; }
-        .status-badge { background: #f39c12; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        :root { --sidebar-width: 240px; --primary: #27ae60; --dark: #2c3e50; --light: #ecf0f1; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; }
+        .sidebar { width: var(--sidebar-width); background: var(--dark); height: 100vh; position: fixed; color: white; padding: 20px; box-sizing: border-box; }
+        .sidebar h2 { font-size: 1.2em; border-bottom: 1px solid #3e4f5f; padding-bottom: 10px; margin-bottom: 30px; }
+        .sidebar a { display: block; color: var(--light); text-decoration: none; padding: 12px; margin: 8px 0; border-radius: 5px; transition: 0.3s; }
+        .sidebar a:hover { background: #34495e; color: var(--primary); }
+        .sidebar a.active { background: var(--primary); color: white; }
+        .main-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); padding: 40px; box-sizing: border-box; }
+        .stats-row { display: flex; gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; flex: 1; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid var(--primary); }
+        .stat-card h4 { margin: 0; color: #7f8c8d; text-transform: uppercase; font-size: 0.75em; }
+        .stat-card div { font-size: 1.8em; font-weight: bold; color: var(--dark); margin-top: 5px; }
+        .card { background: white; padding: 25px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h3 { margin-top: 0; color: var(--dark); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid #eee; color: #7f8c8d; font-size: 0.85em; }
+        td { padding: 15px; border-bottom: 1px solid #f9f9f9; font-size: 0.95em; }
+        .btn-assign { background: var(--primary); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; margin-top: 5px;}
+        select { padding: 10px; border-radius: 5px; border: 1px solid #ddd; width: 100%; background: white; }
+        .empty-state { text-align: center; color: #999; padding: 40px; font-style: italic; }
     </style>
 </head>
-<body onload="syncManagerDashboard()">
+<body onload="initializeManagerView()">
 
-<nav>
-    <div style="font-size: 1.4em; font-weight: bold;">Animal Branch: Management</div>
-    <div>
-        <a href="billing.html">Billing Records</a>
-        <a href="index.html" style="color: #e74c3c;">Logout</a>
+<div class="sidebar">
+    <h2>Animal Branch <br><small>Manager Suite</small></h2>
+    <a href="#" class="active">📊 Dashboard</a>
+    <a href="billing.html">💰 Financials</a>
+    <a href="customer.html">👤 Customer View</a>
+    <br><br>
+    <a href="index.html" style="color: #e74c3c;">🚪 Logout</a>
+</div>
+
+<div class="main-content">
+    <div class="stats-row">
+        <div class="stat-card">
+            <h4>Pending Jobs</h4>
+            <div id="count-pending">0</div>
+        </div>
+        <div class="stat-card" style="border-left-color: #3498db;">
+            <h4>Registered Staff</h4>
+            <div id="count-staff">0</div>
+        </div>
+        <div class="stat-card" style="border-left-color: #f1c40f;">
+            <h4>System Logs</h4>
+            <div style="font-size: 1em; color: #27ae60;">● Online</div>
+        </div>
     </div>
-</nav>
-
-<div class="container">
 
     <div class="card">
-        <h3>Daily Operations Protocol</h3>
-        <ul class="protocol-list">
-            <li><strong>Verification:</strong> Confirm all entry codes via the secure database before departure.</li>
-            <li><strong>Safety:</strong> Ensure leash and harness integrity for all walking appointments.</li>
-            <li><strong>Documentation:</strong> Staff must mark visits "Completed" to trigger client billing.</li>
-        </ul>
-    </div>
-
-    <div class="card">
-        <h3>Team Directory</h3>
+        <h3>👥 Staff Directory</h3>
         <table>
-            <thead>
-                <tr><th>Staff ID</th><th>Name</th><th>Contact Number</th><th>Email Address</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>EMP-101</td><td>Sarah Jenkins</td><td><a href="tel:5550101" class="contact-link">555-0101</a></td><td><a href="mailto:s.jenkins@animalbranch.com" class="contact-link">Email Sarah</a></td></tr>
-                <tr><td>EMP-102</td><td>Mark Peterson</td><td><a href="tel:5550102" class="contact-link">555-0102</a></td><td><a href="mailto:m.petersen@animalbranch.com" class="contact-link">Email Mark</a></td></tr>
-            </tbody>
+            <thead><tr><th>Username</th><th>Role</th><th>System Status</th></tr></thead>
+            <tbody id="staff-directory-body">
+                </tbody>
         </table>
     </div>
 
     <div class="card">
-        <h3>Assign Staff to New Requests</h3>
+        <h3>📝 Assignment Queue</h3>
         <table>
             <thead>
-                <tr>
-                    <th>Requested Time</th>
-                    <th>Pet Name</th>
-                    <th>Service Type</th>
-                    <th>Status</th>
-                    <th>Assign Team Member</th>
-                    <th>Action</th>
-                </tr>
+                <tr><th>Time</th><th>Pet Name</th><th>Service</th><th>Assign Registered Staff</th></tr>
             </thead>
             <tbody id="manager-appt-table">
                 </tbody>
         </table>
     </div>
-
 </div>
 
 <script>
-    function syncManagerDashboard() {
-        const table = document.getElementById('manager-appt-table');
+    function initializeManagerView() {
+        const staffTable = document.getElementById('staff-directory-body');
+        const apptTable = document.getElementById('manager-appt-table');
+        const pendingCount = document.getElementById('count-pending');
+        const staffCount = document.getElementById('count-staff');
+
+        // 1. GET REGISTERED STAFF FROM STORAGE
+        let registeredStaff = [];
+        staffTable.innerHTML = "";
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key === 'animalBranch_data') continue;
+            try {
+                const user = JSON.parse(localStorage.getItem(key));
+                if (user.role === 'staff') {
+                    registeredStaff.push(user.username);
+                    let row = staffTable.insertRow();
+                    row.innerHTML = `<td>${user.username}</td><td>${user.role}</td><td><span style="color:green">● Active</span></td>`;
+                }
+            } catch(e) {}
+        }
+        staffCount.innerText = registeredStaff.length;
+
+        // 2. GET APPOINTMENTS
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
-        table.innerHTML = "";
+        const pending = data.filter(a => a.status === "Pending");
+        pendingCount.innerText = pending.length;
 
-        // We only show requests that are still "Pending" (unassigned)
-        const pendingRequests = data.filter(a => a.status === "Pending");
-
-        if (pendingRequests.length === 0) {
-            table.innerHTML = "<tr><td colspan='6' style='text-align:center; color: #888; padding: 20px;'>No new requests currently pending assignment.</td></tr>";
+        apptTable.innerHTML = "";
+        if (pending.length === 0) {
+            apptTable.innerHTML = "<tr><td colspan='4' class='empty-state'>No new requests found in system.</td></tr>";
         } else {
-            pendingRequests.forEach(appt => {
-                let row = table.insertRow();
+            pending.forEach(appt => {
+                let row = apptTable.insertRow();
+                
+                // Create the Staff Dropdown based on actually registered users
+                let options = registeredStaff.length > 0 
+                    ? registeredStaff.map(name => `<option value="${name}">${name}</option>`).join('')
+                    : `<option disabled>No staff registered</option>`;
+
                 row.innerHTML = `
                     <td>${appt.time}</td>
                     <td><strong>${appt.name}</strong></td>
                     <td>${appt.service}</td>
-                    <td><span class="status-badge">${appt.status}</span></td>
                     <td>
-                        <select id="staff-select-${appt.id}">
-                            <option value="Sarah Jenkins">Sarah Jenkins (101)</option>
-                            <option value="Mark Peterson">Mark Peterson (102)</option>
-                        </select>
+                        <select id="staff-select-${appt.id}">${options}</select>
+                        <button class="btn-assign" onclick="assignJob(${appt.id})">CONFIRM ASSIGNMENT</button>
                     </td>
-                    <td><button class="btn-assign" onclick="assignJob(${appt.id})">Confirm Assignment</button></td>
                 `;
             });
         }
@@ -112,19 +130,21 @@
 
     function assignJob(apptId) {
         let data = JSON.parse(localStorage.getItem('animalBranch_data'));
-        const staffName = document.getElementById(`staff-select-${apptId}`).value;
-        
-        const index = data.findIndex(a => a.id === apptId);
-        if (index !== -1) {
-            data[index].status = "Assigned";
-            data[index].assignedTo = staffName;
-
-            localStorage.setItem('animalBranch_data', JSON.stringify(data));
-            alert("Assignment Complete: " + staffName + " has been assigned to this task.");
-            syncManagerDashboard(); 
+        const selector = document.getElementById(`staff-select-${apptId}`);
+        if (!selector || selector.value === "No staff registered") {
+            alert("Error: You must register a Staff account first!");
+            return;
         }
+        
+        const staffName = selector.value;
+        const index = data.findIndex(a => a.id === apptId);
+        data[index].status = "Assigned";
+        data[index].assignedTo = staffName;
+
+        localStorage.setItem('animalBranch_data', JSON.stringify(data));
+        alert("Success: Task assigned to " + staffName);
+        initializeManagerView();
     }
 </script>
-
 </body>
 </html>
