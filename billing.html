@@ -1,28 +1,66 @@
-<div class="container">
-    <div class="card">
-        <h2>Service Billing & Invoices</h2>
-        <table>
-            <thead>
-                <tr><th>Date</th><th>Pet Name</th><th>Service</th><th>Total Due</th></tr>
-            </thead>
-            <tbody id="billing-table"></tbody>
-        </table>
-        <h3 id="total-revenue" style="text-align: right; color: #27ae60;">Total: $0.00</h3>
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bills</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        nav { background: #333; color: white; padding: 10px; margin-bottom: 20px; }
+        nav a { color: white; text-decoration: none; margin: 0 10px; }
+        table { width: 70%; margin: 0 auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; }
+        .total { font-size: 20px; font-weight: bold; margin-top: 20px; color: green; }
+    </style>
+</head>
+<body onload="loadBills()">
+
+<nav>
+    <strong>Animal Branch Billing</strong> | 
+    <a href="customer.html">Back to Booking</a>
+</nav>
+
+<h1>Service Invoices</h1>
+<p>Customer: <span id="billUser"></span></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Pet</th>
+            <th>Service</th>
+            <th>Charge</th>
+        </tr>
+    </thead>
+    <tbody id="billBody"></tbody>
+</table>
+
+<div class="total">Total Balance Due: <span id="totalPrice">$0.00</span></div>
+
+<button onclick="window.print()" style="margin-top: 20px; padding: 10px;">Print My Bill</button>
 
 <script>
-    function loadBilling() {
-        const table = document.getElementById('billing-table');
+    function loadBills() {
+        const currentUser = localStorage.getItem('logged_in_user');
+        document.getElementById('billUser').innerText = currentUser;
+        
+        const billBody = document.getElementById('billBody');
         const billingData = JSON.parse(localStorage.getItem('animalBranch_billing') || "[]");
+        
+        // This is where you'd filter for just this user if you wanted, 
+        // but for a beginner project, showing all "Completed" services is easiest.
         let total = 0;
-
-        billingData.forEach(item => {
-            let row = table.insertRow();
-            row.innerHTML = `<td>${item.date}</td><td>${item.pet}</td><td>${item.service}</td><td><strong>${item.amount}</strong></td>`;
-            total += parseFloat(item.amount.replace('$', ''));
+        
+        billingData.forEach(bill => {
+            let row = billBody.insertRow();
+            row.innerHTML = `<td>${bill.date}</td><td>${bill.pet}</td><td>${bill.service}</td><td>${bill.amount}</td>`;
+            
+            // Convert "$25.00" string to number to add up
+            let priceNum = parseFloat(bill.amount.replace('$', ''));
+            total += priceNum;
         });
-        document.getElementById('total-revenue').innerText = "Total Balance: $" + total.toFixed(2);
+
+        document.getElementById('totalPrice').innerText = "$" + total.toFixed(2);
     }
-    window.onload = loadBilling;
 </script>
+
+</body>
+</html>
