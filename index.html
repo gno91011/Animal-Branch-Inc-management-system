@@ -1,64 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Animal Branch Inc. | Gateway</title>
+    <title>Welcome | Animal Branch Inc.</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 380px; text-align: center; border: 1px solid #ddd; }
-        .company-logo { width: 220px; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .toggle-link { color: #2980b9; cursor: pointer; font-size: 0.8em; text-decoration: underline; margin-top: 15px; display: block; }
-        #error-msg { color: #e74c3c; font-size: 0.85em; margin-top: 15px; font-weight: bold; display: none; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        nav { background: #2c3e50; width: 100%; padding: 15px 0; color: white; text-align: center; font-weight: bold; font-size: 1.4em; }
+        
+        .hero-section { text-align: center; padding: 40px; }
+        .company-logo { width: 200px; margin-bottom: 20px; }
+        
+        /* RESTORED: PHOTO GALLERY ON LOGIN */
+        .login-gallery { display: flex; gap: 15px; margin-bottom: 30px; justify-content: center; }
+        .login-gallery img { width: 180px; height: 130px; object-fit: cover; border-radius: 8px; border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+        .login-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; border-top: 5px solid #27ae60; }
+        h2 { margin-top: 0; color: #2c3e50; text-align: center; }
+        
+        label { display: block; margin-top: 15px; font-size: 0.9em; color: #666; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        
+        .btn-login { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 1em; }
+        .btn-login:hover { background: #219150; }
+        
+        .register-link { text-align: center; margin-top: 20px; font-size: 0.85em; }
+        .register-link a { color: #2980b9; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
-<div class="login-card">
+
+<nav>Animal Branch Inc.</nav>
+
+<div class="hero-section">
     <img src="Screenshot 2026-01-28 104451.png" alt="Animal Branch Logo" class="company-logo">
-    <h2 id="form-title">System Login</h2>
-    <select id="role">
-        <option value="staff">Staff / Manager</option>
-        <option value="owner">Pet Owner</option>
-    </select>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="pass" placeholder="Password">
-    <button id="main-btn" onclick="handleAuth()">Sign In</button>
-    <p id="error-msg"></p>
-    <span class="toggle-link" id="toggle-text" onclick="toggleForm()">Need an account? Register here</span>
+    <h1>Professional Pet Care Portal</h1>
+
+    <div class="login-gallery">
+        <img src="istockphoto.png" alt="Pet 1">
+        <img src="friendly-golden-retriever.png" alt="Pet 2">
+        <img src="istockphoto.png" alt="Pet 3">
+    </div>
+
+    <div class="login-card">
+        <h2>Secure Login</h2>
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter username">
+        
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password">
+        
+        <label>Identify Your Role</label>
+        <select id="role">
+            <option value="customer">Pet Owner (Customer)</option>
+            <option value="staff">Staff Member (Employee)</option>
+            <option value="manager">Management / Admin</option>
+        </select>
+
+        <button class="btn-login" onclick="handleLogin()">Access Portal</button>
+
+        <div class="register-link">
+            New to Animal Branch? <a href="register.html">Create an Account</a>
+        </div>
+    </div>
 </div>
 
 <script>
-    let isRegistering = false;
-    function toggleForm() {
-        isRegistering = !isRegistering;
-        document.getElementById('form-title').innerText = isRegistering ? "Create Account" : "System Login";
-        document.getElementById('main-btn').innerText = isRegistering ? "Register" : "Sign In";
-        document.getElementById('toggle-text').innerText = isRegistering ? "Already have an account? Login" : "Need an account? Register here";
-        document.getElementById('error-msg').style.display = "none";
-    }
-
-    function handleAuth() {
+    function handleLogin() {
         const user = document.getElementById('username').value;
-        const pass = document.getElementById('pass').value;
+        const pass = document.getElementById('password').value;
         const role = document.getElementById('role').value;
-        const error = document.getElementById('error-msg');
-        
-        if (!user || !pass) { error.innerText = "Fill in all fields."; error.style.display = "block"; return; }
 
-        if (isRegistering) {
-            localStorage.setItem(user, JSON.stringify({username: user, password: pass, role: role}));
-            alert("Account created! You can now login.");
-            toggleForm();
-        } else {
-            const stored = JSON.parse(localStorage.getItem(user));
-            if ((role === "staff" && user === "admin" && pass === "staff123") || (stored && stored.password === pass && stored.role === role)) {
-                window.location.href = (role === "staff") ? "schedule.html" : "customer.html";
+        // MASTER ADMIN BYPASS (As established)
+        if (user === "admin" && pass === "staff123") {
+            localStorage.setItem('logged_in_user', 'Admin');
+            window.location.href = "schedule.html";
+            return;
+        }
+
+        // CHECK REGISTERED USERS
+        const savedUserData = localStorage.getItem(user);
+        
+        if (savedUserData) {
+            const userData = JSON.parse(savedUserData);
+            
+            if (userData.password === pass) {
+                // SUCCESS: SAVE USERNAME TO SESSION
+                localStorage.setItem('logged_in_user', user);
+
+                // REDIRECT BASED ON ROLE
+                if (role === 'manager') {
+                    window.location.href = "schedule.html";
+                } else if (role === 'staff') {
+                    window.location.href = "staff-tasks.html";
+                } else {
+                    window.location.href = "customer.html";
+                }
             } else {
-                error.innerText = "ACCESS DENIED: Invalid Credentials";
-                error.style.display = "block";
+                alert("Incorrect password.");
             }
+        } else {
+            alert("User not found. Please register first.");
         }
     }
 </script>
+
 </body>
 </html>
