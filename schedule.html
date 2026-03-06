@@ -1,13 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Management Dashboard | Animal Branch Inc.</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; color: #333; }
+        nav { background: #2c3e50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        nav a { color: #ecf0f1; text-decoration: none; font-weight: bold; margin-left: 20px; transition: 0.3s; }
+        nav a:hover { color: #27ae60; }
+        
+        .container { padding: 30px; max-width: 1200px; margin: auto; }
+        .card { background: white; padding: 25px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 10px; display: inline-block; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 15px; }
+        th, td { border: 1px solid #eee; padding: 15px; text-align: left; }
+        th { background: #f8f9fa; color: #2c3e50; font-weight: 600; text-transform: uppercase; font-size: 0.85em; }
+        
+        .contact-link { color: #2980b9; text-decoration: none; font-weight: bold; }
+        .btn-assign { background: #27ae60; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .btn-assign:hover { background: #219150; transform: translateY(-1px); }
+        
+        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 160px; }
+        .protocol-list { line-height: 1.8; color: #555; }
+        .status-badge { background: #f39c12; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+    </style>
+</head>
 <body onload="syncManagerDashboard()">
+
+<nav>
+    <div style="font-size: 1.4em; font-weight: bold;">Animal Branch: Management</div>
+    <div>
+        <a href="billing.html">Billing Records</a>
+        <a href="index.html" style="color: #e74c3c;">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
     <div class="card">
-        <h3>Incoming Requests (Assign Staff)</h3>
+        <h3>Daily Operations Protocol</h3>
+        <ul class="protocol-list">
+            <li><strong>Verification:</strong> Confirm all entry codes via the secure database before departure.</li>
+            <li><strong>Safety:</strong> Ensure leash and harness integrity for all walking appointments.</li>
+            <li><strong>Documentation:</strong> Staff must mark visits "Completed" to trigger client billing.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>Team Directory</h3>
         <table>
             <thead>
-                <tr><th>Pet</th><th>Service</th><th>Select Staff</th><th>Action</th></tr>
+                <tr><th>Staff ID</th><th>Name</th><th>Contact Number</th><th>Email Address</th></tr>
             </thead>
-            <tbody id="manager-appt-table"></tbody>
+            <tbody>
+                <tr><td>EMP-101</td><td>Sarah Jenkins</td><td><a href="tel:5550101" class="contact-link">555-0101</a></td><td><a href="mailto:s.jenkins@animalbranch.com" class="contact-link">Email Sarah</a></td></tr>
+                <tr><td>EMP-102</td><td>Mark Peterson</td><td><a href="tel:5550102" class="contact-link">555-0102</a></td><td><a href="mailto:m.petersen@animalbranch.com" class="contact-link">Email Mark</a></td></tr>
+            </tbody>
         </table>
     </div>
+
+    <div class="card">
+        <h3>Assign Staff to New Requests</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Requested Time</th>
+                    <th>Pet Name</th>
+                    <th>Service Type</th>
+                    <th>Status</th>
+                    <th>Assign Team Member</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="manager-appt-table">
+                </tbody>
+        </table>
+    </div>
+
+</div>
 
 <script>
     function syncManagerDashboard() {
@@ -15,33 +85,46 @@
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
         table.innerHTML = "";
 
-        data.filter(a => a.status === "Pending").forEach((appt, index) => {
-            let row = table.insertRow();
-            row.innerHTML = `
-                <td>${appt.name}</td>
-                <td>${appt.service}</td>
-                <td>
-                    <select id="staff-select-${appt.id}">
-                        <option value="Sarah Jenkins">Sarah Jenkins</option>
-                        <option value="Mark Peterson">Mark Peterson</option>
-                    </select>
-                </td>
-                <td><button class="btn-assign" onclick="assignJob(${appt.id})">Confirm Assignment</button></td>
-            `;
-        });
+        // We only show requests that are still "Pending" (unassigned)
+        const pendingRequests = data.filter(a => a.status === "Pending");
+
+        if (pendingRequests.length === 0) {
+            table.innerHTML = "<tr><td colspan='6' style='text-align:center; color: #888; padding: 20px;'>No new requests currently pending assignment.</td></tr>";
+        } else {
+            pendingRequests.forEach(appt => {
+                let row = table.insertRow();
+                row.innerHTML = `
+                    <td>${appt.time}</td>
+                    <td><strong>${appt.name}</strong></td>
+                    <td>${appt.service}</td>
+                    <td><span class="status-badge">${appt.status}</span></td>
+                    <td>
+                        <select id="staff-select-${appt.id}">
+                            <option value="Sarah Jenkins">Sarah Jenkins (101)</option>
+                            <option value="Mark Peterson">Mark Peterson (102)</option>
+                        </select>
+                    </td>
+                    <td><button class="btn-assign" onclick="assignJob(${appt.id})">Confirm Assignment</button></td>
+                `;
+            });
+        }
     }
 
     function assignJob(apptId) {
         let data = JSON.parse(localStorage.getItem('animalBranch_data'));
         const staffName = document.getElementById(`staff-select-${apptId}`).value;
         
-        // Find the appointment by ID and update it
         const index = data.findIndex(a => a.id === apptId);
-        data[index].status = "Assigned";
-        data[index].assignedTo = staffName;
+        if (index !== -1) {
+            data[index].status = "Assigned";
+            data[index].assignedTo = staffName;
 
-        localStorage.setItem('animalBranch_data', JSON.stringify(data));
-        alert("Task Assigned to " + staffName);
-        syncManagerDashboard(); // Refresh table
+            localStorage.setItem('animalBranch_data', JSON.stringify(data));
+            alert("Assignment Complete: " + staffName + " has been assigned to this task.");
+            syncManagerDashboard(); 
+        }
     }
 </script>
+
+</body>
+</html>
