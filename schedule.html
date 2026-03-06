@@ -1,104 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Management Dashboard | Animal Branch</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f4; margin: 0; }
-        nav { background: #2c3e50; padding: 15px; color: white; display: flex; justify-content: space-between; }
-        nav a { color: white; text-decoration: none; font-weight: bold; }
-        .container { padding: 20px; max-width: 1100px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 0.9em; }
-        th { background: #34495e; color: white; }
-        .btn-assign { background: #3498db; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 3px; }
-        .empty-msg { color: #888; font-style: italic; text-align: center; padding: 20px; }
-    </style>
-</head>
 <body onload="syncManagerDashboard()">
-
-<nav>
-    <span>Manager Dashboard</span>
-    <div>
-        <a href="billing.html" style="margin-right:20px;">Billing</a>
-        <a href="index.html">Logout</a>
-    </div>
-</nav>
-
-<div class="container">
     <div class="card">
-        <h3>Staff Member Log</h3>
-        <table>
-            <thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead>
-            <tbody id="staff-table-body"></tbody>
-        </table>
-    </div>
-
-    <div class="card">
-        <h3>Live Appointment Log</h3>
+        <h3>Incoming Requests (Assign Staff)</h3>
         <table>
             <thead>
-                <tr>
-                    <th>Requested Time</th>
-                    <th>Pet Name</th>
-                    <th>Service</th>
-                    <th>Assign Staff</th>
-                </tr>
+                <tr><th>Pet</th><th>Service</th><th>Select Staff</th><th>Action</th></tr>
             </thead>
-            <tbody id="manager-appt-table">
-                </tbody>
+            <tbody id="manager-appt-table"></tbody>
         </table>
-        <div id="no-data-msg" class="empty-msg" style="display:none;">No appointments logged in system yet.</div>
     </div>
-</div>
 
 <script>
     function syncManagerDashboard() {
-        // 1. SYNC APPOINTMENTS
-        const apptTable = document.getElementById('manager-appt-table');
-        const noData = document.getElementById('no-data-msg');
+        const table = document.getElementById('manager-appt-table');
+        const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
+        table.innerHTML = "";
+
+        data.filter(a => a.status === "Pending").forEach((appt, index) => {
+            let row = table.insertRow();
+            row.innerHTML = `
+                <td>${appt.name}</td>
+                <td>${appt.service}</td>
+                <td>
+                    <select id="staff-select-${appt.id}">
+                        <option value="Sarah Jenkins">Sarah Jenkins</option>
+                        <option value="Mark Peterson">Mark Peterson</option>
+                    </select>
+                </td>
+                <td><button class="btn-assign" onclick="assignJob(${appt.id})">Confirm Assignment</button></td>
+            `;
+        });
+    }
+
+    function assignJob(apptId) {
+        let data = JSON.parse(localStorage.getItem('animalBranch_data'));
+        const staffName = document.getElementById(`staff-select-${apptId}`).value;
         
-        // Pull the list we saved in customer.html
-        const savedAppts = JSON.parse(localStorage.getItem('global_appointments') || "[]");
+        // Find the appointment by ID and update it
+        const index = data.findIndex(a => a.id === apptId);
+        data[index].status = "Assigned";
+        data[index].assignedTo = staffName;
 
-        if (savedAppts.length === 0) {
-            noData.style.display = "block";
-        } else {
-            noData.style.display = "none";
-            savedAppts.forEach(appt => {
-                let row = apptTable.insertRow();
-                row.innerHTML = `
-                    <td>${appt.time}</td>
-                    <td>${appt.name}</td>
-                    <td>${appt.service}</td>
-                    <td>
-                        <select>
-                            <option>-- Select Staff --</option>
-                            <option>Sarah J.</option>
-                            <option>Mark P.</option>
-                        </select>
-                        <button class="btn-assign" onclick="alert('Assignment Logged')">Assign</button>
-                    </td>
-                `;
-            });
-        }
-
-        // 2. SYNC STAFF (Registered Users)
-        const staffTable = document.getElementById('staff-table-body');
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key === 'global_appointments') continue; // Skip the appt list
-            
-            try {
-                const userData = JSON.parse(localStorage.getItem(key));
-                if (userData.role === "staff") {
-                    let row = staffTable.insertRow();
-                    row.innerHTML = `<td>${userData.username}</td><td>${userData.role}</td><td><span style="color:green">Active</span></td>`;
-                }
-            } catch(e) { /* Skip non-user data */ }
-        }
+        localStorage.setItem('animalBranch_data', JSON.stringify(data));
+        alert("Task Assigned to " + staffName);
+        syncManagerDashboard(); // Refresh table
     }
 </script>
-
-</body>
-</html>
