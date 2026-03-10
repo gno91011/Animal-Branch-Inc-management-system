@@ -16,6 +16,17 @@
         
         .logout { color: red !important; }
         .money-text { color: green; font-weight: bold; }
+
+        
+        .reset-btn {
+            background-color: #cc0000;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body onload="initManager()">
@@ -31,6 +42,10 @@
 </nav>
 
 <h1>Management Oversight</h1>
+
+<div style="text-align: right;">
+    <button class="reset-btn" onclick="clearSystemData()">Clear All Orders & Assignments</button>
+</div>
 
 <div class="section">
     <h3>New Requests (Awaiting Assignment)</h3>
@@ -64,7 +79,6 @@
 
 <div class="section" style="border: 2px solid green;">
     <h3>Billing & Revenue Review</h3>
-    <p>This list shows all services that have been completed and billed to customers.</p>
     <table id="billTable">
         <thead>
             <tr>
@@ -85,8 +99,11 @@
         const trackBody = document.getElementById('trackBody');
         const billBody = document.getElementById('billBody');
         
+        reqBody.innerHTML = "";
+        trackBody.innerHTML = "";
+        billBody.innerHTML = "";
+
         let staffNames = [];
-        
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             try {
@@ -98,7 +115,6 @@
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
         const billing = JSON.parse(localStorage.getItem('animalBranch_billing') || "[]");
 
-        // Populate Requests and Tracking
         data.forEach(appt => {
             if (appt.status === "Pending") {
                 let options = staffNames.map(n => `<option value="${n}">${n}</option>`).join('');
@@ -123,7 +139,6 @@
             }
         });
 
-        // Populate Billing Review
         let totalRev = 0;
         billing.forEach(item => {
             billBody.innerHTML += `
@@ -146,6 +161,16 @@
         data[idx].assignedTo = staff;
         localStorage.setItem('animalBranch_data', JSON.stringify(data));
         location.reload();
+    }
+
+    // FUNCTION TO RESET THE DATA
+    function clearSystemData() {
+        if (confirm("Are you sure you want to clear all tasks and billing? This cannot be undone.")) {
+            localStorage.removeItem('animalBranch_data');
+            localStorage.removeItem('animalBranch_billing');
+            alert("System cleared. All current tasks and billing have been removed.");
+            location.reload();
+        }
     }
 </script>
 </body>
