@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Profile | Animal Branch</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f0f0f0; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+        }
+
+        .header-nav { 
+            background-color: #333; 
+            color: white; 
+            width: 100%; 
+            padding: 10px; 
+            text-align: center; 
+            position: fixed; 
+            top: 0; 
+        }
+
+        .main-container {
+            margin-top: 60px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .register-box {
+            background-color: white;
+            border: 1px solid black;
+            padding: 20px;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        .save-button {
+            background-color: green;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-nav">
+    Animal Branch Inc. - New Account Registration
+</div>
+
+<div class="main-container">
+    <img src="Screenshot 2026-01-28 104451.png" alt="Logo" width="120">
+    <h2>Create Your Profile</h2>
+
+    <div class="register-box">
+        <label>Full Name:</label>
+        <input type="text" id="regFullName">
+
+        <label>Email Address:</label>
+        <input type="email" id="regEmail">
+
+        <label>Phone Number:</label>
+        <input type="text" id="regPhone">
+
+        <label>Desired Username:</label>
+        <input type="text" id="regUser">
+        
+        <label>Password:</label>
+        <input type="password" id="regPass">
+        
+        <label>I am a:</label>
+        <select id="regRole">
+            <option value="customer">Customer (Pet Owner)</option>
+            <option value="staff">Staff Member (Employee)</option>
+        </select>
+
+        <button class="save-button" onclick="saveProfile()">Create Profile</button>
+        
+        <a href="index.html" class="back-link">Back to Login</a>
+    </div>
+</div>
+
+<script>
+    function saveProfile() {
+        const user = document.getElementById('regUser').value;
+        const pass = document.getElementById('regPass').value;
+        const role = document.getElementById('regRole').value;
+        const email = document.getElementById('regEmail').value;
+        const phone = document.getElementById('regPhone').value;
+        const fullName = document.getElementById('regFullName').value;
+
+        if (!user || !pass || !email || !phone) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        // Check if username is already taken
+        if (localStorage.getItem(user)) {
+            alert("Username already exists. Try another.");
+            return;
+        }
+
+        const newUser = {
+            username: user,
+            password: pass,
+            role: role,
+            email: email,
+            phone: phone,
+            fullName: fullName
+        };
+
+        // Save to browser memory
+        localStorage.setItem(user, JSON.stringify(newUser));
+
+        alert("Profile created successfully! You can now login.");
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
