@@ -73,7 +73,12 @@
 
     <label>Select Service:</label>
     <select id="pService">
-        <option value="Dog Walking|$25.00">Dog Walking - $25.00</option>
+        <option value="30 Minute Dog Walk|$25.00">30 Minute Dog Walk - $25.00</option>
+        <option value="45 Minute Dog Walk|$35.00">45 Minute Dog Walk - $35.00</option>
+        <option value="60 Minute Dog Walk|$45.00">60 Minute Dog Walk - $45.00</option>
+        
+        <option value="Cat Care (Feeding & Litter)|$25.00">Cat Care (Feeding & Litter) - $25.00</option>
+        
         <option value="Pet Grooming|$55.00">Pet Grooming - $55.00</option>
         <option value="Overnight Stay|$85.00">Overnight Stay - $85.00</option>
     </select>
@@ -144,7 +149,6 @@
         const data = JSON.parse(localStorage.getItem('animalBranch_data') || "[]");
         const currentUser = localStorage.getItem('logged_in_user');
         
-        // Only show requests for this specific logged-in customer
         const myData = data.filter(item => item.customerUser === currentUser);
         
         myData.forEach(item => {
